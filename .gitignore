@@ -1,0 +1,14 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+app/src/main/res/drawable-nodpi
+awerd
+app/mapping.txt
+app/class_files.txt
+app/seeds.txt
+app/unused.txt
+
