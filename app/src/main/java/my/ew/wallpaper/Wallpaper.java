@@ -131,12 +131,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         findWallpapers();
         setContentView(R.layout.activity_wallpaper);
         initUI();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            LayoutTransition lt = new LayoutTransition();
-            lt.enableTransitionType(LayoutTransition.CHANGING);
-            viewGroup = (ViewGroup) findViewById(R.id.linear);
-            viewGroup.setLayoutTransition(lt);
-        }
 
         mPrefs = getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE);
 
