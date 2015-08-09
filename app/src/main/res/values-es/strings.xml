@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Elite Wallpapers</string>
+    <string name="app_label">Elite Wallpapers</string>
+    <string name="set_wallpaper">Establecer fondo de pantalla</string>
+    <string name="no_wallpaper">No hay fondo de pantalla</string>
+    <string name="btn_action">Haga clic en mí</string>
+    <string name="send_text">Test send text</string>
+    <string name="splash_screen">ELITE</string>
+    <string name="splash_screen_two">Wallpapers</string>
+    <string name="link_other_app">Otras aplicaciones</string>
+    <string name="share">Сuota!</string>
+    <string name="click">...</string>
+    <string name="about">Acerca de</string>
+    <string name="warning">Advertencia</string>
+    <string name="no_wallpapers_message">Cuadro negro para ahorrar energía de la batería.\nEl más efectivo en la pantalla AMOLED.</string>
+    <string name="ad_nw_yes_btn">Sí</string>
+    <string name="ad_nw_no_btn">No</string>
+    <string name="img_install_done">Hecho</string>
+    <string name="negative_button_clicked">Okay! Usted jefe!</string>
+    <string name="about_moto">Elite</string>
+    <string name="about_moto_second">Wallpapers</string>
+    <string name="about_text">Esta es una pequeña aplicación\nescrito específicamente\npara los fans de la marca\n<b>Motorola</b>!</string>
+    <string name="title_autor_wallpapers">Autor fondos de pantalla</string>
+    <string name="author_wallpapers">Motorola</string>
+    <string name="title_autor_app">Author app</string>
+    <string name="author_app">Aleksandr Tainyuk\n(by iSanechek)</string>
+    <string name="com_vk">vkontakte</string>
+    <string name="youtube">YouTube</string>
+    <string name="about_author">Аutores</string>
+    <string name="about_author_image">Autor fondos de pantalla</string>
+    <string name="about_author_image_name"><b>Motorola</b></string>
+    <string name="about_author_app">Autor aplicación</string>
+    <string name="about_author_app_name"><b>Aleksandr Tainyuk</b></string>
+    <string name="by">by</string>
+    <string name="awerd">AwerdMedia</string>
+    <string name="thanks_for_click">Gracias</string>
+    <string name="analytics">Analytics</string>
+</resources>

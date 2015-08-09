@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Elite Wallpapers</string>
+    <string name="app_label">Elite Wallpapers</string>
+    <string name="set_wallpaper">Установить</string>
+    <string name="no_wallpaper">Убрать обои</string>
+    <string name="btn_action">Нажми меня</string>
+    <string name="send_text">Test send text</string>
+    <string name="splash_screen">ELITE</string>
+    <string name="splash_screen_two">Wallpapers</string>
+    <string name="link_other_app">Ещё обои</string>
+    <string name="share">Поделиться!</string>
+    <string name="click">...</string>
+    <string name="about">О приложении</string>
+    <string name="warning">Предупреждение</string>
+    <string name="no_wallpapers_message">Чёрный фон позволяет сохранять заряд аккумулятора.\nЭффективно на AMOLED дисплеях.</string>
+    <string name="ad_nw_yes_btn">Да</string>
+    <string name="ad_nw_no_btn">Нет</string>
+    <string name="img_install_done">Установлено</string>
+    <string name="negative_button_clicked"> Как Вам угодно </string>
+    <string name="about_moto">Elite</string>
+    <string name="about_moto_second">Wallpapers</string>
+    <string name="about_text">Это небольшое приложение\nспециально\nдля поклонников бренда\n<b>Motorola</b>!</string>
+    <string name="title_autor_wallpapers">Автор обоев</string>
+    <string name="author_wallpapers">Motorola</string>
+    <string name="title_autor_app">Автор Приложения</string>
+    <string name="author_app">Александр Тайнюк\n(by iSanechek)</string>
+    <string name="com_vk">vkontakte</string>
+    <string name="youtube">YouTube</string>
+    <string name="about_author">Авторы</string>
+    <string name="about_author_image">Автор обоев</string>
+    <string name="about_author_image_name"><b>Motorola</b></string>
+    <string name="about_author_app">Автор приложения</string>
+    <string name="about_author_app_name"><b>Александр Тайнюк</b></string>
+    <string name="by">by</string>
+    <string name="awerd">AwerdMedia</string>
+    <string name="thanks_for_click">Спасибо!</string>
+    <string name="app_setting">Настройки</string>
+    <string name="analytics">Analytics</string>
+</resources>

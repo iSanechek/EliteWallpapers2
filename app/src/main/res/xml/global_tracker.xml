@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="ga_appName">Elite Wallpapers</string>
+
+    <!--Номер версии нужен для того что бы отслеживать разные версии в разных магазинах-->
+    <string name="ga_appVersion">4.1.1 test</string>
+
+    <integer name="ga_sessionTimeout">300</integer>
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <screenName name = "my.ew.wallpaper.Wallpaper">Wallpaper Activity</screenName>
+    <screenName name = "my.ew.wallpaper.Splash">Splash Activity</screenName>
+    <screenName name = "my.elite.wallpapers.About">About Activity</screenName>
+
+    <string name="ga_trackingId">UA-59993425-4</string>
+
+    <!--<integer name="ga_dispatchPeriod">1800</integer>-->
+    <!--<bool name="ga_dryRun">false</bool>-->
+
+    <!--Отклчить перед выкладыванием -->
+    <!--<bool name="ga_debug">true</bool>-->
+
+</resources>

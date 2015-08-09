@@ -1,0 +1,39 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.getkeepsafe.dexcount'
+
+
+android {
+    signingConfigs {
+    }
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+    defaultConfig {
+        applicationId 'my.ew.wallpaper'
+        minSdkVersion 9
+        targetSdkVersion 22
+        versionCode 53
+        versionName '4.1.4'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile files('libs/applovin-sdk-5.4.3.jar')
+    compile files('libs/appodeal-1.12.8.jar')
+    compile files('libs/chartboost-5.4.1.jar')
+    compile files('libs/my-target-4.0.11.jar')
+    compile files('libs/unity-ads-1.4.4.jar')
+    compile 'com.google.android.gms:play-services-analytics:7.5.0'
+    compile 'com.google.android.gms:play-services-ads:7.5.0'
+    compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
+}

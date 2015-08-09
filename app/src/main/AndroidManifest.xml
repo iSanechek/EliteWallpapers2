@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="my.elite.wallpapers" android:installLocation="auto">
+
+    <uses-permission android:name="android.permission.SET_WALLPAPER" />
+    <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:name="my.ew.wallpaper.Analytics">
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.analytics.globalConfigResource"
+            android:resource="@xml/global_tracker" />
+        <activity
+            android:name="my.ew.wallpaper.Splash"
+            android:finishOnCloseSystemDialogs="true"
+            android:theme="@style/ActionBarHide" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="my.ew.wallpaper.Wallpaper"
+            android:theme="@style/Theme.NewMotoTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.SET_WALLPAPER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="my.ew.wallpaper.settings.SettingsActivity" android:theme="@style/Theme.NewMotoTheme" />
+        <activity android:name="my.ew.wallpaper.settings.OldSettingsActivity" android:theme="@style/Theme.NewMotoTheme" />
+
+
+        // Аналитика
+        <receiver android:name="com.google.android.gms.analytics.AnalyticsReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.google.android.gms.analytics.AnalyticsService"
+            android:enabled="true"
+            android:exported="false"/>
+
+        <receiver android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
+
+        // Реклама
+
+        <meta-data android:name="com.appodeal.framework" android:value="android" />
+        <activity android:name="com.appodeal.ads.InterstitialActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name="com.appodeal.ads.VideoActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity android:name="com.appodeal.ads.LoaderActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
+        <activity android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity android:name="com.chartboost.sdk.CBImpressionActivity"
+            android:theme="@android:style/Theme.Translucent"
+            android:excludeFromRecents="true" />
+        <activity android:name="com.applovin.adview.AppLovinInterstitialActivity"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity android:name="com.mopub.mobileads.MoPubActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity android:name="com.mopub.common.MoPubBrowser"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.mopub.mobileads.MraidActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity android:name="org.nexage.sourcekit.mraid.MRAIDBrowser"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity android:name="com.amazon.device.ads.AdActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name="com.unity3d.ads.android.view.UnityAdsFullscreenActivity"
+            android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:hardwareAccelerated="true" />
+
+        <activity android:name="ru.mail.android.mytarget.ads.MyTargetActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+
+    </application>
+
+</manifest>

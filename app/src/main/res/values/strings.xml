@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <!--<string name="banner_ad_unit_id">ca-app-pub-6894328842799343/4523330001</string>-->
+    
+    <string name="app_name">EW</string>
+    <string name="app_label">Elite Wallpapers</string>
+    <string name="set_wallpaper">Set wallpaper</string>
+    <string name="no_wallpaper">No wallpaper</string>
+    <string name="btn_action">Click me</string>
+    <string name="link_other_app">Other apps</string>
+    <string name="share">Share!</string>
+    <string name="click">...</string>
+    <string name="about">About</string>
+    <string name="warning">Warning</string>
+    <string name="no_wallpapers_message">Black picture to save battery power.\nThe most effective on AMOLED display.</string>
+    <string name="ad_nw_yes_btn">Yes</string>
+    <string name="ad_nw_no_btn">No</string>
+    <string name="img_install_done">Done</string>
+    <string name="negative_button_clicked">Ok! You boss!</string>
+    <string name="about_moto">Elite</string>
+    <string name="about_moto_second">Wallpapers</string>
+    <string name="about_text">This is a small application\nwritten specifically\nfor fans of the brand\n<b>Motorola</b>!</string>
+    <string name="title_autor_wallpapers">Author wallpapers</string>
+    <string name="author_wallpapers">Motorola</string>
+    <string name="title_autor_app">Author app</string>
+    <string name="author_app">Aleksandr Tainyuk\n(by iSanechek)</string>
+    <string name="about_author">Authors</string>
+    <string name="about_author_image">Author wallpapers</string>
+    <string name="about_author_image_name"><b>Motorola</b></string>
+    <string name="about_author_app">Author app</string>
+    <string name="about_author_app_name"><b>Aleksandr Tainyuk</b></string>
+    <string name="by">by</string>
+    <string name="awerd">AwerdMedia</string>
+    <string name="thanks_for_click">Thanks. :))</string>
+
+    <!--Settings-->
+    <string name="app_setting">Settings</string>
+
+    <!--MAIN SETTINGS-->
+    <string name="crop_main_title">Main</string>
+
+    <string name="crop_title">Auto cropping</string>
+    <string name="crop_summary">Disable scrolling wallpaper. If desktop is more than one(experimental works).</string>
+
+    <string name="analytics">Analytics</string>
+    <string name="about_analytics">Analytics helps us to improve the app for you.</string>
+
+    <!--ABOUT SETTINGS-->
+    <string name="about_title">Other</string>
+
+    <string name="about_app_title">About app</string>
+    <string name="i_love_ads">No. I love ads</string>
+    <string name="buy_btn">Buy</string>
+    <string name="buy_dialog">Warning</string>
+    <string name="use_libs">Use libs</string>
+    <string name="about_permission">About permission</string>
+    <string name="close_about_dialog">close</string>
+    <string name="whatisnew">What is new</string>
+
+    <!--BILLING-->
+    <string name="demo_purchase"><![CDATA[
+        <b>Donate</b>
+    ]]></string>
+    <string name="demo_item_small_beer">Buy me a coffee</string>
+    <string name="demo_item_medium_beer">Buy me a toast</string>
+    <string name="demo_item_large_beer">Buy me a pizza</string>
+    <string name="hide_tv_label">Hide label panel</string>
+</resources>

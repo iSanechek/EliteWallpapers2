@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Elite Wallpapers</string>
+    <string name="app_label">Elite Wallpapers</string>
+    <string name="set_wallpaper">Hintergrund festlegen</string>
+    <string name="no_wallpaper">Kein Hintergrund</string>
+    <string name="btn_action">Klick mich</string>
+    <string name="send_text">Test send text</string>
+    <string name="splash_screen">ELITE</string>
+    <string name="splash_screen_two">Wallpapers</string>
+    <string name="link_other_app">Andere Apps</string>
+    <string name="share">Aktie!</string>
+    <string name="click">...</string>
+    <string name="about">Über</string>
+    <string name="warning">Warnung</string>
+    <string name="no_wallpapers_message">Schwarz bild, um akkuleistung zu sparen.\nDie effektivste auf AMOLED-Display.</string>
+    <string name="ad_nw_yes_btn">ja</string>
+    <string name="ad_nw_no_btn">Keine</string>
+    <string name="img_install_done">Gemacht</string>
+    <string name="negative_button_clicked">Ok! Sie Chef!</string>
+    <string name="about_moto">Elite</string>
+    <string name="about_moto_second">Wallpapers</string>
+    <string name="about_text">Dies ist eine kleine Anwendung\nspeziell geschrieben\nfür Fans der Marke\n<b>Motorola</b>!</string>
+    <string name="title_autor_wallpapers">Autor Hintergrund</string>
+    <string name="author_wallpapers">Motorola</string>
+    <string name="title_autor_app">Autor app</string>
+    <string name="author_app">Aleksandr Tainyuk\n(by iSanechek)</string>
+    <string name="com_vk">vkontakte</string>
+    <string name="youtube">YouTube</string>
+    <string name="about_author">Autoren</string>
+    <string name="about_author_image">Autor Wallpaper</string>
+    <string name="about_author_image_name"><b>Motorola</b></string>
+    <string name="about_author_app">Autor app</string>
+    <string name="about_author_app_name"><b>Aleksandr Tainyuk</b></string>
+    <string name="by">by</string>
+    <string name="awerd">AwerdMedia</string>
+    <string name="thanks_for_click">Danke</string>
+    <string name="analytics">Analytics</string>
+</resources>

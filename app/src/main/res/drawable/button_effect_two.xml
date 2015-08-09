@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape>
+            <gradient
+                android:startColor="@color/my_primary_dark_color"
+                android:endColor="@color/my_primary_dark_color"/>
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <gradient
+                android:startColor="@color/my_accent_color"
+                android:endColor="@color/my_accent_color" />
+        </shape>
+    </item>
+</selector>

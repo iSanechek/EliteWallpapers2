@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <PreferenceCategory android:title="@string/crop_main_title">
+
+        <CheckBoxPreference android:key="crop"
+            android:title="@string/crop_title"
+            android:summary="@string/crop_summary"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference android:key="anal"
+            android:title="@string/analytics"
+            android:summary="@string/about_analytics"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference android:key="tvl"
+            android:title="@string/hide_tv_label"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/about_title">
+        <PreferenceScreen android:key="about_us" android:title="@string/about_app_title" />
+
+        <PreferenceScreen android:key="whatisnew" android:title="@string/whatisnew" />
+        <PreferenceScreen android:key="libs" android:title="@string/use_libs" />
+        <PreferenceScreen android:key="perm" android:title="@string/about_permission" />
+    </PreferenceCategory>
+</PreferenceScreen>
