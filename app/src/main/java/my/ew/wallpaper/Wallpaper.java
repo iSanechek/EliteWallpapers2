@@ -202,12 +202,12 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             	dialogShow();
                 break;
                 case R.id.settings:
-//                    settingShow();
-                    disableShowADS();
+                    settingShow();
+//                    disableShowADS();
                     break;
             case R.id.share:
-//                share();
-                initShowADS();
+                share();
+//                initShowADS();
                 break;
             default:
                 break;
