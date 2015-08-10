@@ -7,9 +7,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Random;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.LayoutTransition;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.WallpaperManager;
@@ -36,18 +33,17 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
 import android.util.Log;
 
-import android.view.Gravity;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
-import android.view.animation.Animation;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Gallery;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -73,7 +69,7 @@ import my.ew.wallpaper.util.IabHelper;
 import my.ew.wallpaper.util.IabResult;
 import my.ew.wallpaper.util.Inventory;
 import my.ew.wallpaper.util.Purchase;
-import my.ew.wallpaper.utils.NetworkUtil;
+import my.ew.wallpaper.utils.AnimUtils;
 import my.ew.wallpaper.utils.PreferencesHelper;
 
 public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -104,11 +100,12 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private ArrayList<Integer> mThumbs;
     private ArrayList<Integer> mImages;
     private WallpaperLoader mLoader;
-    private TextView tv_label;
     private Toolbar toolbar;
-    private LinearLayout fl, ll;
-    private ImageButton buyBtn;
-    private ViewGroup viewGroup;
+    private LinearLayout fl;
+    private FrameLayout tbl;
+    private Button buyBtn;
+
+    int aHeight;
 
     private IabHelper mHelper;
 
@@ -156,13 +153,9 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         toolbar.setTitle(R.string.app_name);
 
         fl = (LinearLayout) findViewById(R.id.showsAds);
-        fl.setVisibility(View.GONE);
-        tv_label = (TextView) findViewById(R.id.tv_lebel);
-        tv_label.setVisibility(View.GONE);
+        tbl = (FrameLayout) findViewById(R.id.btn_buy_cont);
 
-
-        buyBtn = (ImageButton) findViewById(R.id.buy_btn);
-        buyBtn.setVisibility(View.GONE);
+        buyBtn = (Button) findViewById(R.id.buy_btn);
         buyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -732,9 +725,14 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                fl.setVisibility(View.VISIBLE);
-                tv_label.setVisibility(View.VISIBLE);
-                buyBtn.setVisibility(View.VISIBLE);
+                if (fl.getVisibility() == View.GONE) {
+                    AnimUtils startAH = new AnimUtils(fl, 1000, AnimUtils.EXPAND);
+                    startAH.setHeight(aHeight);
+                    fl.startAnimation(startAH);
+                }
+
+                tbl.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -742,10 +740,14 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private void disableShowADS() {
+        if (fl.getVisibility() == View.VISIBLE) {
+            AnimUtils helper = new AnimUtils(fl, 1000, AnimUtils.COLLAPSED);
+            aHeight = helper.getHeight();
+            fl.startAnimation(helper);
+        }
+
+        tbl.setVisibility(View.GONE);
         Appodeal.hide(Wallpaper.this, Appodeal.BANNER_VIEW);
-        tv_label.setVisibility(View.GONE);
-        fl.setVisibility(View.GONE);
-        buyBtn.setVisibility(View.GONE);
         Appodeal.hide(Wallpaper.this, Appodeal.INTERSTITIAL);
     }
 
@@ -763,7 +765,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             @Override
             public void onBannerLoaded() {
                 initShowADS();
-                hideTvLabel();
                 Appodeal.show(Wallpaper.this, Appodeal.BANNER_VIEW);
             }
 
@@ -782,16 +783,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         });
     }
 
-    private void hideTvLabel() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(tv_label.getVisibility() == View.VISIBLE) {
-                    tv_label.setVisibility(View.GONE);
-                }
-            }
-        });
-    }
     private void showThksToast() {
         runOnUiThread(new Runnable() {
             @Override
