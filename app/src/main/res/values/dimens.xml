@@ -4,4 +4,12 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="stroke_width">8dp</dimen>
     <dimen name="gallery_spacing">1dp</dimen>
+
+    <!--PHONE ROOT-->
+    <!--About Activity-->
+    <dimen name="about_iv_padding">5dp</dimen>
+    <dimen name="about_iv_marginTop">10dp</dimen>
+    <dimen name="about_tv_marginTop">20dp</dimen>
+
+    <!--TABLET ROOT-->
 </resources>

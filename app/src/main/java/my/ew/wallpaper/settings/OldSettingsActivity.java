@@ -54,10 +54,8 @@ public class OldSettingsActivity extends PreferenceActivity {
             }
         });
 
-        final CheckBoxPreference hideCb = (CheckBoxPreference) findPreference("tvl");
         final CheckBoxPreference ach = (CheckBoxPreference) findPreference("anal");
         if (!PreferencesHelper.isAdsDisabled()) {
-            hideCb.setEnabled(false);
             ach.setEnabled(false);
         }
 

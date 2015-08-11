@@ -14,10 +14,6 @@
             android:summary="@string/about_analytics"
             android:defaultValue="true" />
 
-        <CheckBoxPreference android:key="tvl"
-            android:title="@string/hide_tv_label"
-            android:defaultValue="false" />
-
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/about_title">
         <PreferenceScreen android:key="about_us" android:title="@string/about_app_title" />

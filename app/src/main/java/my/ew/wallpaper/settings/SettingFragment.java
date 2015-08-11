@@ -39,10 +39,6 @@ public class SettingFragment extends PreferenceFragment {
 
         addPreferencesFromResource(R.xml.settings);
 
-        final CheckBoxPreference cbf = (CheckBoxPreference) findPreference("crop");
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            cbf.setEnabled(false);
-        }
 
         final PreferenceScreen screen = (PreferenceScreen) findPreference("about_us");
         screen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -64,10 +60,8 @@ public class SettingFragment extends PreferenceFragment {
             }
         });
 
-        final CheckBoxPreference hideCb = (CheckBoxPreference) findPreference("tvl");
         final CheckBoxPreference ach = (CheckBoxPreference) findPreference("anal");
         if (!PreferencesHelper.isAdsDisabled()) {
-            hideCb.setEnabled(false);
             ach.setEnabled(false);
         }
 

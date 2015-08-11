@@ -1,34 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linear"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/my_primary_dark_color"
     android:orientation="vertical">
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:theme="@style/MyToolbartheme"
-        app:popupTheme="@style/MyThemePopUp" >
-        <FrameLayout android:id="@+id/btn_buy_cont"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
 
-            <ImageButton android:id="@+id/buy_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_lock_outline_white_24dp"
-                android:background="@color/my_primary_color"
-                android:layout_gravity="right"
-                android:layout_marginRight="20dp" />
-        </FrameLayout>
-    </android.support.v7.widget.Toolbar>
+    <include layout="@layout/toolbar" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -85,20 +64,6 @@
             android:orientation="vertical"
             android:background="@color/my_primary_color"
             android:visibility="gone">
-
-            <com.appodeal.ads.BannerView
-                android:id="@+id/appodealBannerView"
-                android:layout_width="match_parent"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                android:layout_height="50dp"
-                android:visibility="gone" />
-
-            <LinearLayout android:id="@+id/testLayout"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="#000000"
-                android:orientation="vertical"></LinearLayout>
 
         </LinearLayout>
     </LinearLayout>  

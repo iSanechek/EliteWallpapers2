@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#fff" >
+    android:background="@color/my_white_color" >
 
     <RelativeLayout
         android:id="@+id/relative"
@@ -18,9 +18,9 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:background="@drawable/imge_circle_bordure"
-            android:padding="5dp"
+            android:padding="@dimen/about_iv_padding"
             android:src="@drawable/ic_launcher"
-            android:layout_marginTop="10dp" />
+            android:layout_marginTop="@dimen/about_iv_marginTop" />
 
         <TextView
             android:id="@+id/textView"

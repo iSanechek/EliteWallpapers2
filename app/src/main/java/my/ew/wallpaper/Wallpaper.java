@@ -54,8 +54,6 @@ import android.widget.Toast;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
-import com.appodeal.ads.Appodeal;
-import com.appodeal.ads.BannerCallbacks;
 import com.devspark.appmsg.AppMsg;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
@@ -77,11 +75,9 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private static final String LOG = "wallpaper";
 
     // Сылку нудно будет заменить на актуальную
-    private static final String link_other_apps = "https://play.google.com/store/apps/details?id=my.awerd.wallpapers";
-    // Этот ключ тоже нужно заменить на новый
-    private static final String LICENSE_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiQTsbYNXek8F3PaB53Yqp/NUvWv/VDc2SZcdArqq1yCwLTZbkQo0GjYyqihpLXn/jUHPWiW7UYVm2tN0h0V46cSOESP5VtWEGXzgcA/vWbVR7h/xIoV/J0BURrBUHMcKTr6iwH26pchL+7RwQrmllFhDzA3KgBJa9sy+LvhgThepBPvx5+SgaVB/i5hl3QC8lUSyuv4JkPCVlJrLxBHDYo+obpqifGniJSyuTMy/2yxQ/pVzHC1xhxDQgDaLIzyZMmmneekh08mvM9Kfxi1D89rW7InxzYPhVnfmeaeTTvf5ACH7u+guEey8qoHc88K9VawZtMNch0DnBvIyvB+HnQIDAQAB";
-    // Этот ключ тоже надо заменить
-    private static final String appKey = "dd5464c8f61e73cb2072b7d8f1fa011cf221289f7322d635";
+    private static final String link_other_apps = "";
+
+    private static final String LICENSE_KEY = "";
 
     private static final int RC_REQUEST = 10001;
     // Это айди покупки - можно и другой
@@ -102,7 +98,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private WallpaperLoader mLoader;
     private Toolbar toolbar;
     private LinearLayout fl;
-    private FrameLayout tbl;
     private Button buyBtn;
 
     int aHeight;
@@ -153,7 +148,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         toolbar.setTitle(R.string.app_name);
 
         fl = (LinearLayout) findViewById(R.id.showsAds);
-        tbl = (FrameLayout) findViewById(R.id.btn_buy_cont);
 
         buyBtn = (Button) findViewById(R.id.buy_btn);
         buyBtn.setOnClickListener(new View.OnClickListener() {
@@ -259,7 +253,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         Log.d(LOG, "onResume");
         mIsWallpaperSet = false;
         if (!PreferencesHelper.isAdsDisabled()) {
-            Appodeal.onResume(this, Appodeal.BANNER_VIEW);
+
         }
     }
     
@@ -299,11 +293,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     public void onBackPressed() {
         super.onBackPressed();
         if (!PreferencesHelper.isAdsDisabled()) {
-            if (Appodeal.isLoaded(Appodeal.INTERSTITIAL)) {
-                Appodeal.hide(Wallpaper.this, Appodeal.BANNER_VIEW);
-                Appodeal.show(Wallpaper.this, Appodeal.INTERSTITIAL);
                 Log.d(LOG, "appodeal show");
-            }
         }
     }
 
@@ -600,7 +590,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
     // TOAST
     private void done() {
-//        Toast.makeText(this, R.string.img_install_done, Toast.LENGTH_LONG).show();
         AppMsg dm = AppMsg.makeText(this, R.string.img_install_done, AppMsg.STYLE_CONFIRM);
         dm.setParent(R.id.fam);
         dm.setDuration(AppMsg.LENGTH_SHORT);
@@ -625,7 +614,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         // Тут тоже надо ссылку заменить на актуальную
-        sendIntent.putExtra(Intent.EXTRA_TEXT, " #Download #Elite #Wallpapers on #Google #Play - https://play.google.com/store/apps/details?id=my.elite.wallpapers");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, " #Download #Elite #Wallpapers on #Google #Play - тут должна быть ссылка");
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }
@@ -730,9 +719,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                     startAH.setHeight(aHeight);
                     fl.startAnimation(startAH);
                 }
-
-                tbl.setVisibility(View.VISIBLE);
-
             }
         });
 
@@ -746,41 +732,12 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             fl.startAnimation(helper);
         }
 
-        tbl.setVisibility(View.GONE);
-        Appodeal.hide(Wallpaper.this, Appodeal.BANNER_VIEW);
-        Appodeal.hide(Wallpaper.this, Appodeal.INTERSTITIAL);
     }
 
     //ADS
     private void initADS() {
         Log.d(LOG, "initADS");
-//        if (NetworkUtil.isOnline(this)) {
-//            Appodeal.setAutoCache(Appodeal.INTERSTITIAL, false);
-//        }
-
-        Appodeal.initialize(this, appKey, Appodeal.INTERSTITIAL | Appodeal.BANNER_VIEW);
-        Appodeal.setBannerViewId(R.id.appodealBannerView);
-        Appodeal.setTesting(true);
-        Appodeal.setBannerCallbacks(new BannerCallbacks() {
-            @Override
-            public void onBannerLoaded() {
-                initShowADS();
-                Appodeal.show(Wallpaper.this, Appodeal.BANNER_VIEW);
-            }
-
-            @Override
-            public void onBannerFailedToLoad() {
-            }
-
-            @Override
-            public void onBannerShown() {
-            }
-
-            @Override
-            public void onBannerClicked() {
-                showThksToast();
-            }
-        });
+//
     }
 
     private void showThksToast() {
@@ -831,8 +788,12 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
             Purchase purchase = inventory.getPurchase(ADS_DISABLE);
             PreferencesHelper.savePurchase(getApplicationContext(), PreferencesHelper.Purchase.DISABLE_ADS, purchase != null && verifyDeveloperPayload(purchase));
-            if (PreferencesHelper.isAdsDisabled()) {
+            if (!PreferencesHelper.isAdsDisabled()) {
                 initADS();
+            } else if (fl.getVisibility() == View.VISIBLE) {
+                disableShowADS();
+            } else {
+                Log.d(LOG, "");
             }
         }
     };
@@ -875,15 +836,17 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
                 Log.d(LOG, "Purchase for disabling ads done. Congratulating user.");
                 PreferencesHelper.savePurchase(getApplication(), PreferencesHelper.Purchase.DISABLE_ADS, true);
-                if (PreferencesHelper.isAdsDisabled()) {
+                if (!PreferencesHelper.isAdsDisabled()) {
                     initADS();
+                } else if (fl.getVisibility() == View.VISIBLE) {
+                    disableShowADS();
+                } else {
+                    Log.d(LOG, "");
                 }
             }
 
         }
     };
-
-
 
     // Это тоже к хуям нужно будет выпилить
     public class RandomString {

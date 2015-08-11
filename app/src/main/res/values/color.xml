@@ -6,6 +6,9 @@
     <color name="btn_pressed">#009688</color>
     <color name="btn_normal">#212121</color>
 
+    <!--Main color-->
+    <color name="my_white_color">#ffffff</color>
+
     <!--Wallpaper Chooser Activity-->
     <color name="background_liner_layout">#212121</color>
     <color name="background_relative_layout">#212121</color>

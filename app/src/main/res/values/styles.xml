@@ -4,6 +4,7 @@
     <style name="Theme.NewMotoTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/my_primary_color</item>
         <item name="colorPrimaryDark">@color/my_primary_dark_color</item>
+        <item name="colorAccent">@color/my_accent_color</item>
     </style>
     
     <style name="ActionBarHide" parent="Theme.AppCompat">
