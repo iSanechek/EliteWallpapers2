@@ -9,7 +9,6 @@ import java.util.HashMap;
 
 import my.elite.wallpapers.R;
 
-
 public class Analytics extends Application {
 
     private static final String PROPERTY_ID = "UA-59993425-4";
