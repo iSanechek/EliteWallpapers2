@@ -16,6 +16,7 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -27,7 +28,7 @@ import my.ew.wallpaper.utils.PreferencesHelper;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class SettingFragment extends PreferenceFragment {
 
-    private static final String LOG_TAG = "SettingsFragment";
+//    private static final String LOG_TAG = "SettingsFragment";
 
     public SettingFragment() {}
 
@@ -35,7 +36,7 @@ public class SettingFragment extends PreferenceFragment {
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        Log.d(LOG_TAG, "onCreate");
+//        Log.d(LOG_TAG, "onCreate");
 
         addPreferencesFromResource(R.xml.settings);
 
@@ -63,6 +64,7 @@ public class SettingFragment extends PreferenceFragment {
         final CheckBoxPreference ach = (CheckBoxPreference) findPreference("anal");
         if (!PreferencesHelper.isAdsDisabled()) {
             ach.setEnabled(false);
+            ach.setSummary(R.string.enable_after_inapp);
         }
 
 

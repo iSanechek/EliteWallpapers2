@@ -63,8 +63,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@color/my_primary_color"
-            android:visibility="gone">
+            android:visibility="gone" >
 
+            <com.appodeal.ads.BannerView
+                android:id="@+id/appodealBannerView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="vertical"
+                android:background="#212121">
+            <RelativeLayout android:id="@+id/test_lay"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#fff"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Test ept"
+                    android:gravity="center_horizontal"/>
+            </RelativeLayout>
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>  

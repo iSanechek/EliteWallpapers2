@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
 
+import com.crashlytics.android.Crashlytics;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,12 +27,12 @@ import my.ew.wallpaper.utils.PreferencesHelper;
  */
 public class OldSettingsActivity extends PreferenceActivity {
 
-    private static final String LOG_TAG = "OldSettingActivity";
+//    private static final String LOG_TAG = "OldSettingActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(LOG_TAG, "onCreate");
+//        Log.d(LOG_TAG, "onCreate");
 
         addPreferencesFromResource(R.xml.settings);
 
@@ -38,7 +40,7 @@ public class OldSettingsActivity extends PreferenceActivity {
         screen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Log.d(LOG_TAG, "onPrefClick About us");
+//                Log.d(LOG_TAG, "onPrefClick About us");
                 final View cv;
                 try {
                     cv = LayoutInflater.from(OldSettingsActivity.this).inflate(R.layout.about_activity, null);
@@ -57,13 +59,14 @@ public class OldSettingsActivity extends PreferenceActivity {
         final CheckBoxPreference ach = (CheckBoxPreference) findPreference("anal");
         if (!PreferencesHelper.isAdsDisabled()) {
             ach.setEnabled(false);
+            ach.setSummary(R.string.enable_after_inapp);
         }
 
         final PreferenceScreen sc = (PreferenceScreen) findPreference("perm");
         sc.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Log.d(LOG_TAG, "onPrefClick perm");
+//                Log.d(LOG_TAG, "onPrefClick perm");
                 final View customView;
                 try {
                     customView = LayoutInflater.from(OldSettingsActivity.this).inflate(R.layout.dialog_webview, null);
@@ -104,7 +107,7 @@ public class OldSettingsActivity extends PreferenceActivity {
         presc.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Log.d(LOG_TAG, "onPrefClick libs");
+//                Log.d(LOG_TAG, "onPrefClick libs");
                 final View customView;
                 try {
                     customView = LayoutInflater.from(OldSettingsActivity.this).inflate(R.layout.dialog_webview, null);
