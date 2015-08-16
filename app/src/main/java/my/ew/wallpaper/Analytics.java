@@ -18,6 +18,7 @@ public class Analytics extends Application {
 
     public static int GENERAL_TRACKER = 0;
 
+
     public enum TrackerName {
         APP_TRACKER,
         GLOBAL_TRACKER,

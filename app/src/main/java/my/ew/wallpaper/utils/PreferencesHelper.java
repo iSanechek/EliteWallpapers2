@@ -16,8 +16,6 @@ public class PreferencesHelper {
     public static final String PREF_WELCOME_DONE = "pref_welcome_done";
     private static final String GAPPS_SETTING = "gappspref";
     private static final String TAG_DISABLED_ADS = "disabledADS";
-    protected static final String WALLPAPER_WIDTH_KEY = "wallpaper.width";
-    protected static final String WALLPAPER_HEIGHT_KEY = "wallpaper.height";
 
     private static boolean disabledADS;
 

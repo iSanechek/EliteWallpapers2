@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <!--<string name="banner_ad_unit_id">ca-app-pub-6894328842799343/4523330001</string>-->
-    
     <string name="app_name">EW</string>
-    <string name="app_label">Elite Wallpapers</string>
+    <string name="app_label">EW</string>
     <string name="set_wallpaper">Set wallpaper</string>
     <string name="no_wallpaper">No wallpaper</string>
     <string name="btn_action">Click me</string>
@@ -66,4 +64,5 @@
     <string name="demo_item_medium_beer">Buy me a toast</string>
     <string name="demo_item_large_beer">Buy me a pizza</string>
     <string name="hide_tv_label">Hide label panel</string>
+    <string name="enable_after_inapp">Enable after purchase</string>
 </resources>

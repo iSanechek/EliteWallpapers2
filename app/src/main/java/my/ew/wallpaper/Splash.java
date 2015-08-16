@@ -9,32 +9,29 @@ import android.os.Handler;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
-
 import io.fabric.sdk.android.Fabric;
 import my.elite.wallpapers.R;
 import my.ew.wallpaper.utils.PreferencesHelper;
+import timber.log.Timber;
 
 public class Splash extends Activity {
+
+    private static final String TAG = Splash.class.getSimpleName();
 
     private static int SPLASH_OUT = 1500;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.splah_activity);
 
         checkEnableGS();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
         initStop();
     }
 
     private void initStop() {
+        Timber.d("splash initStop");
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -46,6 +43,7 @@ public class Splash extends Activity {
     }
 
     private void checkEnableGS() {
+        Timber.d("checkEnableGS");
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
         if(status == ConnectionResult.SUCCESS) {
             // если есть

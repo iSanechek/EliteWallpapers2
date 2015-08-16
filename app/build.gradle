@@ -41,13 +41,18 @@ android {
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services-analytics:7.5.0'
-    compile 'com.google.android.gms:play-services-ads:7.5.0'
+    compile 'com.google.android.gms:play-services-analytics:7.8.0'
+    compile 'com.google.android.gms:play-services-ads:7.8.0'
     compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.0@aar') {
         transitive = true;
     }
-    compile 'com.orhanobut:logger:1.11'
     compile 'com.android.support:support-v4:22.2.1'
     compile 'com.android.support:appcompat-v7:22.2.1'
+    compile files('libs/applovin-sdk-5.4.3.jar')
+    compile files('libs/appodeal-1.12.8.jar')
+    compile files('libs/chartboost-5.4.1.jar')
+    compile files('libs/my-target-4.0.11.jar')
+    compile 'com.jakewharton.timber:timber:3.1.0'
+    compile files('libs/unity-ads-1.4.4.jar')
 }
