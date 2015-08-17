@@ -50,16 +50,15 @@ import android.widget.Toast;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
-import com.appodeal.ads.Appodeal;
-import com.appodeal.ads.BannerCallbacks;
-import com.appodeal.ads.InterstitialCallbacks;
-import com.crashlytics.android.Crashlytics;
 import com.devspark.appmsg.AppMsg;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import my.elite.wallpapers.BuildConfig;
 import my.elite.wallpapers.R;
 import my.ew.wallpaper.settings.OldSettingsActivity;
 import my.ew.wallpaper.settings.SettingsActivity;
@@ -74,14 +73,12 @@ import my.ew.wallpaper.utils.PreferencesHelper;
 
 public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private static final String TAG = Wallpaper.class.getSimpleName();
 
     // Сылку нудно будет заменить на актуальную
     private static final String link_other_apps = "";
 
     private static final String LICENSE_KEY = "";
 
-    private static final String appKey = "";
 
     private static final int RC_REQUEST = 10001;
     // Это айди покупки - можно и другой
@@ -108,6 +105,8 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     int aHeight;
 
     private IabHelper mHelper;
+    private AdView mAdView;
+    private InterstitialAd mInterstitialAd;
 
     /**
      * to good time
@@ -262,7 +261,9 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     protected void onResume() {
         super.onResume();
         if (!PreferencesHelper.isAdsDisabled()) {
-            Appodeal.onResume(this, Appodeal.BANNER);
+            if (mAdView != null) {
+                mAdView.resume();
+            }
         }
         mIsWallpaperSet = false;
 
@@ -270,6 +271,11 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     
     @Override
     public void onPause() {
+        if (!PreferencesHelper.isAdsDisabled()) {
+            if (mAdView != null) {
+                mAdView.pause();
+            }
+        }
         super.onPause();
         mIsWallpaperSet = false;
         if (SDK_INT < ICE_CREAM_SANDWICH) {
@@ -288,6 +294,11 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
     @Override
     protected void onDestroy() {
+        if (!PreferencesHelper.isAdsDisabled()) {
+            if (mAdView != null) {
+                mAdView.destroy();
+            }
+        }
         super.onDestroy();
         if (mLoader != null && mLoader.getStatus() != WallpaperLoader.Status.FINISHED) {
             mLoader.cancel(true);
@@ -302,8 +313,8 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     public void onBackPressed() {
         super.onBackPressed();
         if (!PreferencesHelper.isAdsDisabled()) {
-            if (Appodeal.isLoaded(Appodeal.INTERSTITIAL)) {
-                Appodeal.show(this, Appodeal.INTERSTITIAL);
+            if (mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
             }
         }
     }
@@ -479,7 +490,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 setWallpaper(stream);
                 setResult(RESULT_OK);
             } catch (Exception e) {
-                Crashlytics.logException(e);
+
             }
         }
     }
@@ -547,7 +558,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 return BitmapFactory.decodeResource(getResources(),
                         mImages.get(params[0]), mOptions);
             } catch (OutOfMemoryError e) {
-                Crashlytics.logException(e);
+
                 return null;
             }            
         }
@@ -718,7 +729,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.black);
             wm.setBitmap(bitmap);
         } catch (IOException e) {
-            Crashlytics.logException(e);
+
         }
 
     }
@@ -733,7 +744,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                     fl.startAnimation(startAH);
 
                 }
-                Appodeal.show(Wallpaper.this, Appodeal.BANNER_VIEW);
+
                 if (mPrefs.getBoolean("gapps", true)) {
                     tbCont.setVisibility(View.VISIBLE);
                     buyButton.setVisibility(View.VISIBLE);
@@ -748,7 +759,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             aHeight = helper.getHeight();
             fl.startAnimation(helper);
         }
-        Appodeal.hide(Wallpaper.this, Appodeal.BANNER_VIEW);
+
         if (tbCont.getVisibility() == View.VISIBLE) {
             tbCont.setVisibility(View.GONE);
             buyButton.setVisibility(View.GONE);
@@ -757,43 +768,56 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
     //ADS
     private void initADS() {
-        Appodeal.setBannerViewId(R.id.appodealBannerView);
-        Appodeal.initialize(this, appKey, Appodeal.INTERSTITIAL | Appodeal.BANNER_VIEW);
-        Appodeal.setBannerCallbacks(new BannerCallbacks() {
+
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("5DQOOZ4HKJ95S85L")
+                .addTestDevice("TA17606LXJ")
+                .addTestDevice("TA2470I7O")
+                .build();
+        mAdView.setAdListener(new AdListener() {
             @Override
-            public void onBannerLoaded() {
+            public void onAdClosed() {
+                super.onAdClosed();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                super.onAdFailedToLoad(errorCode);
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+                showThksToast();
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
                 initShowADS();
             }
-
-            @Override
-            public void onBannerFailedToLoad() {}
-
-            @Override
-            public void onBannerShown() {}
-
-            @Override
-            public void onBannerClicked() {
-                showThksToast();
-            }
         });
+        mAdView.loadAd(adRequest);
 
-        Appodeal.setInterstitialCallbacks(new InterstitialCallbacks() {
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-6423555452159863/9385231833");
+        mInterstitialAd.setAdListener(new AdListener() {
             @Override
-            public void onInterstitialLoaded(boolean b) {}
-
-            @Override
-            public void onInterstitialFailedToLoad() {}
-
-            @Override
-            public void onInterstitialShown() {}
-
-            @Override
-            public void onInterstitialClicked() {
-                showThksToast();
+            public void onAdClosed() {
+                super.onAdClosed();
             }
 
             @Override
-            public void onInterstitialClosed() {}
+            public void onAdFailedToLoad(int errorCode) {
+                super.onAdFailedToLoad(errorCode);
+            }
+
+            @Override
+            public void onAdOpened() {
+                super.onAdOpened();
+                showThksToast();
+            }
         });
     }
 
@@ -813,7 +837,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             public void onIabSetupFinished(IabResult result) {
                 if (!result.isSuccess()) {
-                    Crashlytics.log("Problem setting up in-app billing: " + result);
+//                    Crashlytics.log("Problem setting up in-app billing: " + result);
                     return;
                 }
 
@@ -831,7 +855,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
             // Is it a failure?
             if (result.isFailure()) {
-                Crashlytics.log("Failed to query inventory: " + result);
+
                 return;
             }
 
@@ -842,7 +866,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             } else if (fl.getVisibility() == View.VISIBLE) {
                 disableShowADS();
             } else {
-                Crashlytics.log("Oops. mGotInventoryListener");
+
             }
         }
     };
@@ -853,7 +877,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
         } else {
-            Crashlytics.log("onActivityResult handle by IABUtil");
+
         }
     }
 
@@ -886,7 +910,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 } else if (fl.getVisibility() == View.VISIBLE) {
                     disableShowADS();
                 } else {
-                    Crashlytics.log("Oops. mPurchaseFinishedListener");
+
                 }
             }
         }

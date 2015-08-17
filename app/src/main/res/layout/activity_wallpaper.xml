@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linear"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -64,30 +65,15 @@
             android:orientation="vertical"
             android:background="@color/my_primary_color"
             android:visibility="gone" >
-
-            <com.appodeal.ads.BannerView
-                android:id="@+id/appodealBannerView"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="vertical"
-                android:background="#212121">
-            <RelativeLayout android:id="@+id/test_lay"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="#fff"
-                android:visibility="gone">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="Test ept"
-                    android:gravity="center_horizontal"/>
-            </RelativeLayout>
-            </LinearLayout>
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                ads:adSize="SMART_BANNER"
+                ads:adUnitId="ca-app-pub-6423555452159863/3478299030">
+            </com.google.android.gms.ads.AdView>
 
         </LinearLayout>
     </LinearLayout>  

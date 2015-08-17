@@ -7,13 +7,10 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceScreen;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
-
-import com.crashlytics.android.Crashlytics;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
