@@ -1,13 +1,17 @@
 package my.ew.wallpaper;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -50,15 +54,19 @@ import android.widget.Toast;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.PurchaseEvent;
+import com.crashlytics.android.answers.ShareEvent;
 import com.devspark.appmsg.AppMsg;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.analytics.GoogleAnalytics;
-import com.google.android.gms.analytics.HitBuilders;
-import com.google.android.gms.analytics.Tracker;
 
+import io.fabric.sdk.android.Fabric;
 import my.elite.wallpapers.R;
 import my.ew.wallpaper.settings.OldSettingsActivity;
 import my.ew.wallpaper.settings.SettingsActivity;
@@ -68,10 +76,12 @@ import my.ew.wallpaper.util.IabResult;
 import my.ew.wallpaper.util.Inventory;
 import my.ew.wallpaper.util.Purchase;
 import my.ew.wallpaper.utils.AnimUtils;
+import my.ew.wallpaper.utils.HelperUtil;
 import my.ew.wallpaper.utils.PreferencesHelper;
 
-
 public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+
+    private static final String TAG = Wallpaper.class.getSimpleName();
 
 
     // Сылку нудно будет заменить на актуальную
@@ -88,6 +98,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     protected static final String WALLPAPER_WIDTH_KEY = "wallpaper.width";
     protected static final String WALLPAPER_HEIGHT_KEY = "wallpaper.height";
     private static final String PREF_KEY = "wallpaper_prefs";
+    private static final String INTERSTITAL_KEY = "ca-app-pub-6423555452159863/9385231833";
     private static SharedPreferences mPrefs;
 
 	private Gallery mGallery;
@@ -97,6 +108,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private ArrayList<Integer> mThumbs;
     private ArrayList<Integer> mImages;
     private WallpaperLoader mLoader;
+    private CreateBitmap createBitmap;
     private Toolbar toolbar;
     private LinearLayout fl;
     private ImageButton buyButton;
@@ -107,6 +119,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private IabHelper mHelper;
     private AdView mAdView;
     private InterstitialAd mInterstitialAd;
+
 
     /**
      * to good time
@@ -127,25 +140,30 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         setContentView(R.layout.activity_wallpaper);
         initUI();
 
-        mPrefs = getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE);
+        Fabric.with(this, new Crashlytics());
+        // Add debug mode
 
+        mPrefs = getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE);
         PreferenceManager.setDefaultValues(this, R.xml.settings, true);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         PreferencesHelper.loadSettings(this);
 
-        if (mPrefs.getBoolean("anal", true)) {
-            initAnalytics();
-        }
+        initAnalytics();
 
         if (!PreferencesHelper.isWelcomeDone(this)){
             showAboutPermission();
+            Answers.getInstance().logCustom(new CustomEvent("First start"));
         }
 
-        if (mPrefs.getBoolean("gapps", true)) {
-            initBilling();
-        } else {
+        if (HelperUtil.isGappsEnable(this)) {
+            if (HelperUtil.isOnline(this)) {
+                initBilling();
+            }
+        } else if (HelperUtil.isOnline(this)) {
             initADS();
+            Answers.getInstance().logCustom(new CustomEvent("No Gapps"));
+        } else {
+            Crashlytics.log("initADS isOnline false");
         }
     }
 
@@ -178,19 +196,18 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
     private void buyBtnEvent() {
         if (!PreferencesHelper.isAdsDisabled()) {
+            if (HelperUtil.isOnline(this)) {
+                Answers.getInstance().logPurchase(new PurchaseEvent()
+                        .putItemName("Ads").putItemType("Disable Ads").putItemId(ADS_DISABLE));
 //            RandomString randomString = new RandomString(36);
 //            String payload = randomString.nextString();
-            String payload = "";
-            mHelper.launchPurchaseFlow(this, ADS_DISABLE, RC_REQUEST,
-                    mPurchaseFinishedListener, payload);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (mPrefs.getBoolean("anal", true)) {
-            GoogleAnalytics.getInstance(this).reportActivityStart(this);
+                String payload = "";
+                mHelper.launchPurchaseFlow(this, ADS_DISABLE, RC_REQUEST,
+                        mPurchaseFinishedListener, payload);
+            } else {
+                noInternetMessage();
+                Crashlytics.log("Click Buy Btn isOnline false");
+            }
         }
     }
     
@@ -201,17 +218,15 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 			switch (menuItem.getItemId()) {
             case R.id.other_apps:
                 otherLink();
-//                disableShowADS();
                 break;
             case R.id.no_wallpaper:
-            	dialogShow();
+                dialogShow();
                 break;
                 case R.id.settings:
                     settingShow();
                     break;
             case R.id.share:
                 share();
-//                initShowADS();
                 break;
             default:
                 break;
@@ -224,7 +239,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         switch (view.getId()) {
             case R.id.set:
                 selectWallpaper(mGallery.getSelectedItemPosition());
-                done();
+                Answers.getInstance().logCustom(new CustomEvent("onSetWallpapers"));
                 break;
             default:
                 break;
@@ -266,7 +281,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             }
         }
         mIsWallpaperSet = false;
-
     }
     
     @Override
@@ -283,13 +297,9 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         }
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
-        if (mPrefs.getBoolean("anal", true)) {
-            GoogleAnalytics.getInstance(this).reportActivityStop(this);
-        }
     }
 
     @Override
@@ -304,6 +314,10 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             mLoader.cancel(true);
             mLoader = null;
         }
+        if (createBitmap != null && createBitmap.getStatus() != CreateBitmap.Status.FINISHED) {
+            createBitmap.cancel(true);
+            createBitmap = null;
+        }
 
         if (mHelper != null) mHelper.dispose();
         mHelper = null;
@@ -313,8 +327,14 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     public void onBackPressed() {
         super.onBackPressed();
         if (!PreferencesHelper.isAdsDisabled()) {
-            if (mInterstitialAd.isLoaded()) {
-                mInterstitialAd.show();
+            if (!HelperUtil.isOnline(this)) {
+                if (mInterstitialAd.isLoaded()) {
+                    mInterstitialAd.show();
+                    Answers.getInstance().logContentView(new ContentViewEvent()
+                            .putContentName("InterstitialAd").putContentType("InterstitialAd Show"));
+                } else {
+                    Crashlytics.log("mInterstitialAd No Loaded");
+                }
             }
         }
     }
@@ -329,6 +349,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     /**
      *  START MAGIC
      */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     protected boolean isScreenLarge(Resources res) {
         Configuration config = res.getConfiguration();
         return config.smallestScreenWidthDp >= 720;
@@ -344,12 +365,10 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             return new Point(suggestedWidth, suggestedHeight);
         }
 
-
 //         Else, calculate desired size from screen size
         Point minDims = new Point();
         Point maxDims = new Point();
         windowManager.getDefaultDisplay().getCurrentSizeRange(minDims, maxDims);
-
 
         int maxDim = Math.max(maxDims.x, maxDims.y);
         int minDim = Math.max(minDims.x, minDims.y);
@@ -475,6 +494,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
      *  FINISH MAGIC
      */
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void selectWallpaper(int position) {
         if (mIsWallpaperSet) {
             return;
@@ -484,14 +504,13 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
         if (mPrefs.getBoolean("crop", true)) {
             cropImageAndSetWallpaper(mImages.get(position));
+            done();
+            Crashlytics.log("crop true");
         } else {
-            try {
-                InputStream stream = getResources().openRawResource(mImages.get(position));
-                setWallpaper(stream);
-                setResult(RESULT_OK);
-            } catch (Exception e) {
-
+            if (createBitmap != null && createBitmap.getStatus() != CreateBitmap.Status.FINISHED) {
+                createBitmap.cancel(true);
             }
+            createBitmap = (CreateBitmap) new CreateBitmap().execute(position);
         }
     }
 
@@ -533,9 +552,9 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             if (thumbDrawable != null) {
                 thumbDrawable.setDither(true);
             } else {
-//                .e(String.format(
-//                        "Error decoding thumbnail resId=%d for wallpaper #%d",
-//                        thumbRes, position));
+                Crashlytics.log(String.format(
+                        "Error decoding thumbnail resId=%d for wallpaper #%d",
+                        thumbRes, position));
             }
             return image;
         }
@@ -558,7 +577,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 return BitmapFactory.decodeResource(getResources(),
                         mImages.get(params[0]), mOptions);
             } catch (OutOfMemoryError e) {
-
+                Crashlytics.logException(e);
                 return null;
             }            
         }
@@ -595,21 +614,71 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         }
     }
 
-    // OTHER
+    class CreateBitmap extends AsyncTask<Integer, Void, Bitmap> {
+
+        boolean running;
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            running = true;
+            progressDialog = ProgressDialog.show(Wallpaper.this, "Progress Update", getResources().getString(R.string.wait));
+            progressDialog.setCanceledOnTouchOutside(false);
+        }
+
+        protected Bitmap doInBackground(Integer... params) {
+            if (isCancelled()) return null;
+
+            Bitmap bitmap = null;
+            OutputStream outputStream;
+
+            try {
+                bitmap = BitmapFactory.decodeResource(getResources(),
+                        mImages.get(params[0]));
+                File path = getExternalFilesDir(null);
+                File dir = new File(path + "/Share Image/");
+                if(!dir.exists()) {
+                    dir.mkdirs();
+                }
+
+                File file = new File(dir, "sw.jpg");
+                outputStream = new FileOutputStream(file);
+
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                outputStream.flush();
+                outputStream.close();
+
+                Uri uri = Uri.fromFile(file);
+                Intent i = new Intent(Intent.ACTION_ATTACH_DATA);
+                i.setDataAndType(uri, "image/jpeg");
+                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                i.putExtra("mimeType", "image/jpeg");
+                startActivity(Intent.createChooser(i, "Set As"));
+
+            } catch (OutOfMemoryError e) {
+                Crashlytics.logException(e);
+                return null;
+            } catch (IOException e) {
+                Crashlytics.logException(e);
+            }
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            super.onPostExecute(bitmap);
+            progressDialog.cancel();
+            running = false;
+        }
+    }
+
+    // Analytics
     private void initAnalytics() {
-//        try {
-//            Tracker t = ((Analytics)getApplication()).getTracker(Analytics.TrackerName.APP_TRACKER);
-//            t.setScreenName("Wallpaper");
-//            t.send(new HitBuilders.AppViewBuilder().build());
-//        } catch (Exception e) {
-//            Timber.e("Analytics: " + e);
-//            Crashlytics.logException(e);
-//        }
-        Tracker t = ((Analytics)getApplication()).getTracker(Analytics.TrackerName.APP_TRACKER);
-        t.setScreenName("Wallpaper");
-        t.send(new HitBuilders.AppViewBuilder().build());
-//        t.send(new HitBuilders.EventBuilder().setAction(vBuyBtn).build());
-        t.setScreenName(null);
+//        Tracker t = ((Analytics)getApplication()).getTracker(Analytics.TrackerName.APP_TRACKER);
+//        t.setScreenName("Wallpaper");
+//        t.send(new HitBuilders.AppViewBuilder().build());
+
     }
 
     // TOAST
@@ -629,12 +698,26 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         nd.show();
     }
 
+    private void noInternetMessage() {
+        AppMsg nc = AppMsg.makeText(this, R.string.no_connect, AppMsg.STYLE_ALERT);
+        nc.setParent(R.id.fam);
+        nc.setDuration(AppMsg.LENGTH_SHORT);
+        nc.setAnimation(android.R.anim.fade_in, android.R.anim.slide_out_right);
+        nc.show();
+    }
+
     private void otherLink() {
         Intent semen = new Intent(Intent.ACTION_VIEW, Uri.parse(link_other_apps));
         startActivity(semen);
+        Answers.getInstance().logCustom(new CustomEvent("other link"));
     }
 
     private void share() {
+        Answers.getInstance().logShare(new ShareEvent()
+        .putMethod("share")
+        .putContentName("sharing link")
+        .putContentType("link on Google play")
+        .putContentId("link"));
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         // Тут тоже надо ссылку заменить на актуальную
@@ -698,6 +781,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                     , "text/html", "UTF-8");
         } catch (Throwable e) {
             webView.loadData("<h1>Unable to load</h1><p>" + e.getLocalizedMessage() + "</p>", "text/html", "UTF-8");
+            Crashlytics.logException(e);
         }
     }
 
@@ -724,40 +808,51 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private void noWallpapers() {
+        Answers.getInstance().logCustom(new CustomEvent("No Wallpaper"));
         try {
             WallpaperManager wm = WallpaperManager.getInstance(this);
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.black);
             wm.setBitmap(bitmap);
         } catch (IOException e) {
-
+            Crashlytics.logException(e);
         }
 
     }
 
     private void initShowADS() {
+        Answers.getInstance().logContentView(new ContentViewEvent()
+        .putContentName("initShowADS")
+        .putContentType("Ads Layout Show"));
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (fl.getVisibility() == View.GONE) {
-                    AnimUtils startAH = new AnimUtils(fl, 1000, AnimUtils.EXPAND);
+                    AnimUtils startAH = new AnimUtils(fl, 1500, AnimUtils.EXPAND);
                     startAH.setHeight(aHeight);
                     fl.startAnimation(startAH);
-
                 }
-
+                if (fl.getVisibility() == View.VISIBLE) {
+                    mAdView.setVisibility(View.VISIBLE);
+                }
                 if (mPrefs.getBoolean("gapps", true)) {
                     tbCont.setVisibility(View.VISIBLE);
                     buyButton.setVisibility(View.VISIBLE);
                 }
             }
         });
+
     }
 
     private void disableShowADS() {
+        Crashlytics.log("disableShowADS");
         if (fl.getVisibility() == View.VISIBLE) {
             AnimUtils helper = new AnimUtils(fl, 1000, AnimUtils.COLLAPSED);
             aHeight = helper.getHeight();
             fl.startAnimation(helper);
+        }
+
+        if (mAdView != null) {
+            mAdView.destroy();
         }
 
         if (tbCont.getVisibility() == View.VISIBLE) {
@@ -779,44 +874,59 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
+                Crashlytics.log("onAdClosed");
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 super.onAdFailedToLoad(errorCode);
+                Crashlytics.log("Banner Failed To Load: " + errorCode);
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
                 showThksToast();
+                Answers.getInstance().logCustom(new CustomEvent("Click on ads"));
             }
 
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
                 initShowADS();
+                requestNewInterstitial();
             }
         });
         mAdView.loadAd(adRequest);
+    }
 
+    private void requestNewInterstitial() {
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-6423555452159863/9385231833");
+        mInterstitialAd.setAdUnitId(INTERSTITAL_KEY);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("5DQOOZ4HKJ95S85L")
+                .addTestDevice("TA17606LXJ")
+                .addTestDevice("TA2470I7O")
+                .build();
+        mInterstitialAd.loadAd(adRequest);
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
+                Crashlytics.log("Interstitial on Ad Closed");
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 super.onAdFailedToLoad(errorCode);
+                Crashlytics.log("Interstitial Failed To Load: " + errorCode);
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
                 showThksToast();
+                Answers.getInstance().logCustom(new CustomEvent("Interstitial Click"));
             }
         });
     }
@@ -837,7 +947,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
             public void onIabSetupFinished(IabResult result) {
                 if (!result.isSuccess()) {
-//                    Crashlytics.log("Problem setting up in-app billing: " + result);
+                    Crashlytics.log("Problem setting up in-app billing: " + result);
                     return;
                 }
 
@@ -866,7 +976,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             } else if (fl.getVisibility() == View.VISIBLE) {
                 disableShowADS();
             } else {
-
+                Crashlytics.log("Just Fuck mGotInvertoryListener");
             }
         }
     };
@@ -876,14 +986,14 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
         if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data);
-        } else {
-
         }
     }
 
     /** Verifies the developer payload of a purchase. */
     boolean verifyDeveloperPayload(Purchase p) {
         String payload = p.getDeveloperPayload();
+
+        Crashlytics.log("verifyDeveloperPayload: " + payload);
 		/*
 		 * TODO: здесь когда нибудб будет верификация
 		 * возможно даже со своим сервером
@@ -910,7 +1020,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 } else if (fl.getVisibility() == View.VISIBLE) {
                     disableShowADS();
                 } else {
-
+                    Crashlytics.log("Just Fuck mPurchaseFinishedListener");
                 }
             }
         }

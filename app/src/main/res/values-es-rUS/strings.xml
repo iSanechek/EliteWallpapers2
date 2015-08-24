@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Elite Wallpapers</string>
-    <string name="app_label">Elite Wallpapers</string>
+    <string name="app_name">Elite Wallpaper HD</string>
+    <string name="app_label">Elite Wallpaper HD</string>
     <string name="set_wallpaper">Set wallpaper</string>
     <string name="no_wallpaper">No wallpaper</string>
-    <string name="btn_action">Click me</string>
-    <string name="send_text">Test send text</string>
-    <string name="splash_screen">ELITE</string>
-    <string name="splash_screen_two">Wallpapers</string>
     <string name="link_other_app">Other apps</string>
     <string name="share">Share!</string>
-    <string name="click">...</string>
     <string name="about">About</string>
     <string name="warning">Warning</string>
     <string name="no_wallpapers_message">Black picture to save battery power.\nThe most effective on AMOLED display.</string>
@@ -21,17 +16,6 @@
     <string name="about_moto">Elite</string>
     <string name="about_moto_second">Wallpapers</string>
     <string name="about_text">This is a small application\nwritten specifically\nfor fans of the brand\n<b>Motorola</b>!</string>
-    <string name="title_autor_wallpapers">Author wallpapers</string>
-    <string name="author_wallpapers">Motorola</string>
-    <string name="title_autor_app">Author app</string>
-    <string name="author_app">Aleksandr Tainyuk\n(by iSanechek)</string>
-    <string name="com_vk">vkontakte</string>
-    <string name="youtube">YouTube</string>
-    <string name="about_author">Authors</string>
-    <string name="about_author_image">Author wallpapers</string>
-    <string name="about_author_image_name"><b>Motorola</b></string>
-    <string name="about_author_app">Author app</string>
-    <string name="about_author_app_name"><b>Aleksandr Tainyuk</b></string>
     <string name="by">by</string>
     <string name="awerd">AwerdMedia</string>
     <string name="thanks_for_click">Thanks</string>

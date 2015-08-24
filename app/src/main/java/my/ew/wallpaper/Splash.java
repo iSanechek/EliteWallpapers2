@@ -6,8 +6,11 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import io.fabric.sdk.android.Fabric;
 import my.elite.wallpapers.R;
 import my.ew.wallpaper.utils.PreferencesHelper;
 
@@ -19,10 +22,11 @@ public class Splash extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.splah_activity);
 
-        checkEnableGS();
+//        checkEnableGS();
         initStop();
     }
 
@@ -37,14 +41,14 @@ public class Splash extends Activity {
         }, SPLASH_OUT);
     }
 
-    private void checkEnableGS() {
-        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
-        if(status == ConnectionResult.SUCCESS) {
-            // если есть
-            PreferencesHelper.enableGAPPS(this);
-        } else {
-            // если нету сервисов
-            PreferencesHelper.disableGAPPS(this);
-        }
-    }
+//    private void checkEnableGS() {
+//        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getBaseContext());
+//        if(status == ConnectionResult.SUCCESS) {
+//            // если есть
+//            PreferencesHelper.enableGAPPS(this);
+//        } else {
+//            // если нету сервисов
+//            PreferencesHelper.disableGAPPS(this);
+//        }
+//    }
 }

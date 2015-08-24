@@ -1,17 +1,31 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
 
 
 android {
     signingConfigs {
     }
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion '23.0.0'
     defaultConfig {
         applicationId 'my.ew.wallpaper'
-        minSdkVersion 9
-        targetSdkVersion 22
-        versionCode 53
-        versionName '4.1.4'
+        minSdkVersion 10
+        targetSdkVersion 23
+        versionCode 63
+        versionName '5.0.0'
     }
     buildTypes {
         release {
@@ -25,9 +39,12 @@ android {
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services-analytics:7.8.0'
     compile 'com.google.android.gms:play-services-ads:7.8.0'
     compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
-    compile 'com.android.support:support-v4:22.2.1'
-    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.1@aar') {
+        transitive = true;
+    }
+    compile 'com.android.support:support-v4:23.0.0'
+    compile 'com.android.support:appcompat-v7:23.0.0'
+    compile 'com.android.support:design:23.0.0'
 }

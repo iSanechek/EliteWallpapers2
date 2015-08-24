@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="my.elite.wallpapers" android:installLocation="auto">
+    package="my.elite.wallpapers"
+    android:installLocation="auto" >
 
     <uses-permission android:name="android.permission.SET_WALLPAPER" />
     <uses-permission android:name="android.permission.SET_WALLPAPER_HINTS" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:name="my.ew.wallpaper.Analytics">
-        <meta-data android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" >
         <meta-data
-            android:name="com.google.android.gms.analytics.globalConfigResource"
-            android:resource="@xml/global_tracker" />
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
         <activity
             android:name="my.ew.wallpaper.Splash"
             android:finishOnCloseSystemDialogs="true"
+            android:launchMode="singleTask"
             android:theme="@style/ActionBarHide" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,41 +29,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="my.ew.wallpaper.Wallpaper"
-            android:theme="@style/Theme.NewMotoTheme">
+        <activity
+            android:name="my.ew.wallpaper.Wallpaper"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.NewMotoTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.SET_WALLPAPER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="my.ew.wallpaper.settings.SettingsActivity" android:theme="@style/Theme.NewMotoTheme" />
-        <activity android:name="my.ew.wallpaper.settings.OldSettingsActivity" android:theme="@style/Theme.NewMotoTheme" />
-
-
-        // Аналитика
-        <receiver android:name="com.google.android.gms.analytics.AnalyticsReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
-            </intent-filter>
-        </receiver>
-        <service android:name="com.google.android.gms.analytics.AnalyticsService"
-            android:enabled="true"
-            android:exported="false"/>
-
-        <receiver android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
-            </intent-filter>
-        </receiver>
-        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
-
+        <activity
+            android:name="my.ew.wallpaper.settings.SettingsActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.NewMotoTheme" />
+        <activity
+            android:name="my.ew.wallpaper.settings.OldSettingsActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.NewMotoTheme" />
         // Реклама
-        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />
-        <activity android:name="com.google.android.gms.ads.AdActivity"
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="6edee002b2cffc8c68b11b4a95c03801fa9110e0" />
     </application>
 
 </manifest>

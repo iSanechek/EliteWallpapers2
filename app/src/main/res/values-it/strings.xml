@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Elite Wallpapers</string>
-    <string name="app_label">Elite Wallpapers</string>
+    <string name="app_name">Elite Wallpaper HD</string>
+    <string name="app_label">Elite Wallpaper HD</string>
     <string name="set_wallpaper">Impostare sfondi</string>
     <string name="no_wallpaper">Иon sfondi</string>
-    <string name="btn_action">Fare clic su di me</string>
-    <string name="send_text">Test send text</string>
-    <string name="splash_screen">ELITE</string>
-    <string name="splash_screen_two">Wallpapers</string>
     <string name="link_other_app">Altre applicazioni</string>
     <string name="share">Quota!</string>
-    <string name="click">...</string>
     <string name="about">Su</string>
     <string name="warning">Avvertimento</string>
     <string name="no_wallpapers_message">Foto in bianco per risparmiare la carica della batteria.\nLa più efficace sul display AMOLED.</string>
@@ -21,17 +16,6 @@
     <string name="about_moto">Elite</string>
     <string name="about_moto_second">Wallpapers</string>
     <string name="about_text">Si tratta di una piccola applicazione\nscritto appositamente\nper gli appassionati del marchio\n<b>Motorola</b>!</string>
-    <string name="title_autor_wallpapers">Sfondi autor</string>
-    <string name="author_wallpapers">Motorola</string>
-    <string name="title_autor_app">Autore app</string>
-    <string name="author_app">Aleksandr Tainyuk\n(by iSanechek)</string>
-    <string name="com_vk">vkontakte</string>
-    <string name="youtube">YouTube</string>
-    <string name="about_author">Autori</string>
-    <string name="about_author_image">Autore sfondi</string>
-    <string name="about_author_image_name"><b>Motorola</b></string>
-    <string name="about_author_app">Autore app</string>
-    <string name="about_author_app_name"><b>Aleksandr Tainyuk</b></string>
     <string name="by">by</string>
     <string name="awerd">AwerdMedia</string>
     <string name="thanks_for_click">Grazie</string>

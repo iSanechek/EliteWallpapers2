@@ -14,14 +14,13 @@ public class PreferencesHelper {
 
     private static final String SETTINGS = "wallpaper_prefs_a";
     public static final String PREF_WELCOME_DONE = "pref_welcome_done";
-    private static final String GAPPS_SETTING = "gappspref";
+//    private static final String GAPPS_SETTING = "gappspref";
     private static final String TAG_DISABLED_ADS = "disabledADS";
 
     private static boolean disabledADS;
 
     public static boolean isAdsDisabled() {
         Log.d(TAG, "boolean isAdsDisabled");
-//		LOG.d("disabledADS = "+disabledADS);
         return disabledADS;
     }
 
@@ -60,28 +59,19 @@ public class PreferencesHelper {
         }
 
     }
-
-    public static void saveSettings(Context c) {
-        Log.d(TAG, "saveSettings");
-        SharedPreferences settings = c.getSharedPreferences(SETTINGS, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean(TAG_DISABLED_ADS, disabledADS);
-
-        editor.apply();
-    }
-    public static void enableGAPPS(Context c) {
-        SharedPreferences settings = c.getSharedPreferences(GAPPS_SETTING, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("gapps", true);
-        editor.apply();
-    }
-
-    public static void disableGAPPS(Context c) {
-        SharedPreferences settings = c.getSharedPreferences(GAPPS_SETTING, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("gapps", false);
-        editor.apply();
-    }
+//    public static void enableGAPPS(Context c) {
+//        SharedPreferences settings = c.getSharedPreferences(GAPPS_SETTING, 0);
+//        SharedPreferences.Editor editor = settings.edit();
+//        editor.putBoolean("gapps", true);
+//        editor.apply();
+//    }
+//
+//    public static void disableGAPPS(Context c) {
+//        SharedPreferences settings = c.getSharedPreferences(GAPPS_SETTING, 0);
+//        SharedPreferences.Editor editor = settings.edit();
+//        editor.putBoolean("gapps", false);
+//        editor.apply();
+//    }
 
     public static boolean isWelcomeDone(final Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);

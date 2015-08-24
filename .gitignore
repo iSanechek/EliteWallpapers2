@@ -4,11 +4,13 @@
 /.idea/libraries
 .DS_Store
 /build
-/captures
-app/src/main/res/drawable-nodpi
-awerd
+
+app/build
 app/mapping.txt
 app/class_files.txt
 app/seeds.txt
 app/unused.txt
-
+captures
+awerd
+.gitignore
+app/src/main/res/drawable-nodpi

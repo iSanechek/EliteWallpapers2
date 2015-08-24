@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Elite Wallpapers</string>
-    <string name="app_label">Elite Wallpapers</string>
+    <string name="app_name">Elite Wallpaper HD</string>
+    <string name="app_label">Elite Wallpaper HD</string>
     <string name="set_wallpaper">Ўсталяваць</string>
     <string name="no_wallpaper">Прыбраць шпалеры</string>
-    <string name="btn_action">Націсні мяне</string>
-    <string name="send_text">Test send text</string>
-    <string name="splash_screen">ELITE</string>
-    <string name="splash_screen_two">Wallpapers</string>
     <string name="link_other_app">Яшчэ шпалеры</string>
     <string name="share">Падзяліцца</string>
-    <string name="click">...</string>
     <string name="about">Аб дадатку</string>
     <string name="warning">Папярэджанне</string>
     <string name="no_wallpapers_message">Чорны фон дазваляе лепш захоўваць зарад акумулятара.\nЭфектыўна на AMOLED дысплеях.</string>
@@ -21,17 +16,6 @@
     <string name="about_moto">Elite</string>
     <string name="about_moto_second">Wallpapers</string>
     <string name="about_text">Гэта невялікае прыкладанне\nспецыяльна\nдля прыхільнікаў брэнда\n</string>
-    <string name="title_autor_wallpapers">Аўтар шпалер</string>
-    <string name="author_wallpapers">Motorola</string>
-    <string name="title_autor_app">Аўтар прыкладання</string>
-    <string name="author_app">Аляксандр Тайнюк\n(by iSanechek)</string>
-    <string name="com_vk">vkontakte</string>
-    <string name="youtube">YouTube</string>
-    <string name="about_author">Aўтары</string>
-    <string name="about_author_image">Аўтар шпалер</string>
-    <string name="about_author_image_name"><b>Motorola</b></string>
-    <string name="about_author_app">Аўтар прыкладання</string>
-    <string name="about_author_app_name"><b>Аляксандр Тайнюк</b></string>
     <string name="by">by</string>
     <string name="awerd">AwerdMedia</string>
     <string name="thanks_for_click">Дзякуй за клік</string>
