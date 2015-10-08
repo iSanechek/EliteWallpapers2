@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="ga_sessionTimeout">300</integer>
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!--Activity Add-->
+    <screenName name="">
+        AnalyticsSampleApp ScreenView
+    </screenName>
+
+    <!--Activity Add-->
+    <screenName name="">
+        AnalyticsSampleApp ScreenView
+    </screenName>
+
+
+    <string name="ga_trackingId">UA-66132283-2</string>
+</resources>

@@ -1,80 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/linear"
+    android:id="@+id/coordLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true">
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true">
 
-    <include layout="@layout/toolbar" />
+    <LinearLayout android:id="@+id/linear"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:fitsSystemWindows="true">
 
-    <FrameLayout android:id="@+id/fam"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >     
-        <ImageView
-            android:id="@+id/wallpaper"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:scaleType="centerCrop"/>
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom" >
+        <include layout="@layout/toolbar" />
 
-            <Gallery
-                android:id="@+id/gallery"
+        <FrameLayout android:id="@+id/fam"
+                     android:layout_width="match_parent"
+                     android:layout_height="0dp"
+                     android:layout_weight="1" >
+            <ImageView
+                android:id="@+id/wallpaper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:scaleType="centerCrop"/>
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" />
+                android:layout_gravity="bottom" >
+
+                <Gallery
+                    android:id="@+id/gallery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </FrameLayout>
         </FrameLayout>
-    </FrameLayout>
-    <View android:id="@+id/view_one"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_gravity="center"
-        android:background="#424242" />
-    <LinearLayout 
-        android:id="@+id/btn_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:orientation="vertical" >
-        <View android:id="@+id/view_two"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#424242" />
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/set"
+        <View android:id="@+id/view_one"
+              android:layout_width="match_parent"
+              android:layout_height="1dp"
+              android:layout_gravity="center"
+              android:background="#424242" />
+        <LinearLayout
+            android:id="@+id/btn_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_effect_two"
-            android:onClick="onSetWallpapers"
-            android:text="@string/set_wallpaper"
-            android:textColor="@color/my_text_color"
-            android:textSize="20sp" />
-        <View android:id="@+id/view_three"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="#424242" />
-        <LinearLayout android:id="@+id/showsAds"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/my_primary_color"
-            android:visibility="gone" >
-            <com.google.android.gms.ads.AdView
-                android:id="@+id/adView"
-                android:layout_width="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical" >
+            <View android:id="@+id/view_two"
+                  android:layout_width="match_parent"
+                  android:layout_height="1dp"
+                  android:background="#424242" />
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/set"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_alignParentBottom="true"
-                ads:adSize="SMART_BANNER"
-                ads:adUnitId="ca-app-pub-6423555452159863/3478299030"
-                android:visibility="gone" >
-            </com.google.android.gms.ads.AdView>
+                android:background="@drawable/button_effect_two"
+                android:onClick="onSetWallpapers"
+                android:text="@string/set_wallpaper"
+                android:textColor="@color/my_text_color"
+                android:textSize="20sp" />
+            <View android:id="@+id/view_three"
+                  android:layout_width="match_parent"
+                  android:layout_height="2dp"
+                  android:background="#424242" />
+            <LinearLayout android:id="@+id/showsAds"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:background="@color/my_primary_color"
+                          android:visibility="gone" >
+                <com.google.android.gms.ads.AdView
+                    android:id="@+id/adView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    ads:adSize="SMART_BANNER"
+                    ads:adUnitId="ca-app-pub-6423555452159863/3478299030"
+                    android:visibility="gone" >
+                </com.google.android.gms.ads.AdView>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>  
-</LinearLayout>
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

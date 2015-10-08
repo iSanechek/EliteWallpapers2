@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
+import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -17,6 +18,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -30,6 +32,9 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -46,7 +51,6 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.Gallery;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -58,24 +62,21 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
-import com.crashlytics.android.answers.PurchaseEvent;
-import com.crashlytics.android.answers.ShareEvent;
 import com.devspark.appmsg.AppMsg;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 
+import net.steamcrafted.loadtoast.LoadToast;
+
+import info.hoang8f.widget.FButton;
 import io.fabric.sdk.android.Fabric;
 import my.elite.wallpapers.R;
 import my.ew.wallpaper.settings.OldSettingsActivity;
 import my.ew.wallpaper.settings.SettingsActivity;
 import my.ew.wallpaper.task.BitmapCropTask;
-import my.ew.wallpaper.util.IabHelper;
-import my.ew.wallpaper.util.IabResult;
-import my.ew.wallpaper.util.Inventory;
-import my.ew.wallpaper.util.Purchase;
 import my.ew.wallpaper.utils.AnimUtils;
+
 import my.ew.wallpaper.utils.HelperUtil;
 import my.ew.wallpaper.utils.PreferencesHelper;
 
@@ -83,22 +84,25 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
     private static final String TAG = Wallpaper.class.getSimpleName();
 
+    // to good time
 
-    // Сылку нудно будет заменить на актуальную
-    private static final String link_other_apps = "";
+//
+//    // Сылку нудно будет заменить на актуальную
+//    private static final String link_other_apps = "";
+//
+//    private static final String LICENSE_KEY = "";
+//
+//
+//    private static final int RC_REQUEST = 10001;
+//    // Это айди покупки - можно и другой
+//    private static final String ADS_DISABLE = "removeads";
 
-    private static final String LICENSE_KEY = "";
-
-
-    private static final int RC_REQUEST = 10001;
-    // Это айди покупки - можно и другой
-    private static final String ADS_DISABLE = "removeads";
+    private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 0;
 
     protected static final float WALLPAPER_SCREENS_SPAN = 2f;
     protected static final String WALLPAPER_WIDTH_KEY = "wallpaper.width";
     protected static final String WALLPAPER_HEIGHT_KEY = "wallpaper.height";
     private static final String PREF_KEY = "wallpaper_prefs";
-    private static final String INTERSTITAL_KEY = "ca-app-pub-6423555452159863/9385231833";
     private static SharedPreferences mPrefs;
 
 	private Gallery mGallery;
@@ -111,14 +115,16 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private CreateBitmap createBitmap;
     private Toolbar toolbar;
     private LinearLayout fl;
-    private ImageButton buyButton;
+    private CoordinatorLayout mCoordinatorLayout;
+//    private ImageButton buyButton;
     private FrameLayout tbCont;
+    private LoadToast mLoadToast;
 
     int aHeight;
 
-    private IabHelper mHelper;
+//    private IabHelper mHelper;
     private AdView mAdView;
-    private InterstitialAd mInterstitialAd;
+//    private InterstitialAd mInterstitialAd;
 
 
     /**
@@ -141,30 +147,35 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         initUI();
 
         Fabric.with(this, new Crashlytics());
-        // Add debug mode
+
+        mLoadToast = new LoadToast(this);
 
         mPrefs = getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE);
         PreferenceManager.setDefaultValues(this, R.xml.settings, true);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        PreferencesHelper.loadSettings(this);
+        PreferencesHelper.INSTANCE$.loadSettings(this);
 
-        initAnalytics();
+//        initAnalytics();
 
-        if (!PreferencesHelper.isWelcomeDone(this)){
+        if (!PreferencesHelper.INSTANCE$.isWelcomeDone(this)){
             showAboutPermission();
             Answers.getInstance().logCustom(new CustomEvent("First start"));
         }
 
-        if (HelperUtil.isGappsEnable(this)) {
-            if (HelperUtil.isOnline(this)) {
-                initBilling();
-            }
-        } else if (HelperUtil.isOnline(this)) {
+        if (HelperUtil.INSTANCE$.isOnline(this)) {
             initADS();
-            Answers.getInstance().logCustom(new CustomEvent("No Gapps"));
-        } else {
-            Crashlytics.log("initADS isOnline false");
         }
+
+//        if (HelperUtil.INSTANCE$.isGappsEnable(this)) {
+//            if (HelperUtil.INSTANCE$.isOnline(this)) {
+//                initBilling();
+//            }
+//        } else if (HelperUtil.INSTANCE$.isOnline(this)) {
+//            initADS();
+//            Answers.getInstance().logCustom(new CustomEvent("No Gapps"));
+//        } else {
+//            Crashlytics.log("initADS isOnline false");
+//        }
     }
 
     private void initUI() {
@@ -177,13 +188,13 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         fl = (LinearLayout) findViewById(R.id.showsAds);
         tbCont = (FrameLayout) findViewById(R.id.tb_cont);
 
-        buyButton = (ImageButton) findViewById(R.id.buy_btn);
-        buyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buyBtnEvent();
-            }
-        });
+//        buyButton = (ImageButton) findViewById(R.id.buy_btn);
+//        buyButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                buyBtnEvent();
+//            }
+//        });
 
         mImageView = (ImageView) findViewById(R.id.wallpaper);
         mGallery = (Gallery) findViewById(R.id.gallery);
@@ -192,42 +203,44 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         mGallery.setCallbackDuringFling(false);
         mGallery.setSpacing(getResources().getDimensionPixelSize(R.dimen.gallery_spacing));
 
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordLayout);
+
     }
 
-    private void buyBtnEvent() {
-        if (!PreferencesHelper.isAdsDisabled()) {
-            if (HelperUtil.isOnline(this)) {
-                Answers.getInstance().logPurchase(new PurchaseEvent()
-                        .putItemName("Ads").putItemType("Disable Ads").putItemId(ADS_DISABLE));
-//            RandomString randomString = new RandomString(36);
-//            String payload = randomString.nextString();
-                String payload = "";
-                mHelper.launchPurchaseFlow(this, ADS_DISABLE, RC_REQUEST,
-                        mPurchaseFinishedListener, payload);
-            } else {
-                noInternetMessage();
-                Crashlytics.log("Click Buy Btn isOnline false");
-            }
-        }
-    }
+//    private void buyBtnEvent() {
+//        if (!PreferencesHelper.INSTANCE$.isAdsDisabled()) {
+//            if (HelperUtil.INSTANCE$.isOnline(this)) {
+//                Answers.getInstance().logPurchase(new PurchaseEvent()
+//                        .putItemName("Ads").putItemType("Disable Ads").putItemId(ADS_DISABLE));
+////            RandomString randomString = new RandomString(36);
+////            String payload = randomString.nextString();
+//                String payload = "";
+//                mHelper.launchPurchaseFlow(this, ADS_DISABLE, RC_REQUEST,
+//                        mPurchaseFinishedListener, payload);
+//            } else {
+//                noInternetMessage();
+//                Crashlytics.log("Click Buy Btn isOnline false");
+//            }
+//        }
+//    }
     
     private Toolbar.OnMenuItemClickListener clickListener = new OnMenuItemClickListener() {
 		
 		@Override
 		public boolean onMenuItemClick(MenuItem menuItem) {
 			switch (menuItem.getItemId()) {
-            case R.id.other_apps:
-                otherLink();
-                break;
+//            case R.id.other_apps:
+//                otherLink();
+//                break;
             case R.id.no_wallpaper:
                 dialogShow();
                 break;
                 case R.id.settings:
                     settingShow();
                     break;
-            case R.id.share:
-                share();
-                break;
+//            case R.id.share:
+//                share();
+//                break;
             default:
                 break;
 			}
@@ -275,17 +288,18 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     @Override
     protected void onResume() {
         super.onResume();
-        if (!PreferencesHelper.isAdsDisabled()) {
+        if (!PreferencesHelper.INSTANCE$.isAdsDisabled()) {
             if (mAdView != null) {
                 mAdView.resume();
             }
         }
         mIsWallpaperSet = false;
+//        requestNewInterstitial();
     }
     
     @Override
     public void onPause() {
-        if (!PreferencesHelper.isAdsDisabled()) {
+        if (!PreferencesHelper.INSTANCE$.isAdsDisabled()) {
             if (mAdView != null) {
                 mAdView.pause();
             }
@@ -297,14 +311,21 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         }
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        GoogleAnalytics.getInstance(this).reportActivityStart(this);
+//    }
+//
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        GoogleAnalytics.getInstance(this).reportActivityStop(this);
+//    }
 
     @Override
     protected void onDestroy() {
-        if (!PreferencesHelper.isAdsDisabled()) {
+        if (!PreferencesHelper.INSTANCE$.isAdsDisabled()) {
             if (mAdView != null) {
                 mAdView.destroy();
             }
@@ -319,24 +340,13 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             createBitmap = null;
         }
 
-        if (mHelper != null) mHelper.dispose();
-        mHelper = null;
+//        if (mHelper != null) mHelper.dispose();
+//        mHelper = null;
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (!PreferencesHelper.isAdsDisabled()) {
-            if (!HelperUtil.isOnline(this)) {
-                if (mInterstitialAd.isLoaded()) {
-                    mInterstitialAd.show();
-                    Answers.getInstance().logContentView(new ContentViewEvent()
-                            .putContentName("InterstitialAd").putContentType("InterstitialAd Show"));
-                } else {
-                    Crashlytics.log("mInterstitialAd No Loaded");
-                }
-            }
-        }
     }
 
     public void onItemSelected(AdapterView parent, View v, int position, long id) {
@@ -503,18 +513,86 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         mIsWallpaperSet = true;
 
         if (mPrefs.getBoolean("crop", true)) {
-            cropImageAndSetWallpaper(mImages.get(position));
-            done();
-            Crashlytics.log("crop true");
+            cropAndSetMethod(mImages.get(position));
         } else {
-            if (createBitmap != null && createBitmap.getStatus() != CreateBitmap.Status.FINISHED) {
-                createBitmap.cancel(true);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // code for android android m
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    cropImgTask(position);
+                } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                            AlertDialog.Builder pDialog = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
+                            pDialog.setTitle(R.string.about_permission_dialog_title);
+                            pDialog.setMessage(R.string.about_permission_dialog_message);
+                            pDialog.setCancelable(true);
+                            pDialog.setPositiveButton(R.string.permission_yes_btn, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ActivityCompat.requestPermissions(Wallpaper.this,
+                                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+                                }
+                            });
+                            pDialog.setNegativeButton(R.string.permision_no_btn, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    settingShow();
+                                }
+                            });
+                            pDialog.show();
+                        } else {
+                            ActivityCompat.requestPermissions(Wallpaper.this,
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+                        }
+                }
+            } else {
+                cropImgTask(position);
             }
-            createBitmap = (CreateBitmap) new CreateBitmap().execute(position);
         }
     }
 
-    public void onNothingSelected(AdapterView parent) {
+    public void onNothingSelected(AdapterView parent) {}
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_WRITE_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Snackbar.make(mCoordinatorLayout, R.string.all_ok_bro, Snackbar.LENGTH_LONG).show();
+                } else {
+                    showSnackbar();
+                }
+                return;
+            }
+        }
+    }
+
+    private void cropAndSetMethod(int position) {
+        cropImageAndSetWallpaper(mImages.get(position));
+        done();
+        Crashlytics.log("crop true");
+    }
+
+    private void cropImgTask(int position) {
+        if (createBitmap != null && createBitmap.getStatus() != CreateBitmap.Status.FINISHED) {
+            createBitmap.cancel(true);
+        }
+        createBitmap = (CreateBitmap) new CreateBitmap().execute(position);
+    }
+
+    private void showSnackbar() {
+        Snackbar.make(mCoordinatorLayout, R.string.permission_not_granted, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.app_setting, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        settingShow();
+                    }
+                })
+                .show();
+
     }
 
     // ADAPTER
@@ -617,14 +695,18 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     class CreateBitmap extends AsyncTask<Integer, Void, Bitmap> {
 
         boolean running;
-        ProgressDialog progressDialog;
+
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             running = true;
-            progressDialog = ProgressDialog.show(Wallpaper.this, "Progress Update", getResources().getString(R.string.wait));
-            progressDialog.setCanceledOnTouchOutside(false);
+            mLoadToast.setText(getResources().getString(R.string.wait))
+                    .setBackgroundColor(Color.WHITE)
+                    .setTextColor(getResources().getColor(R.color.my_primary_text_color))
+                    .setProgressColor(getResources().getColor(R.color.my_accent_color))
+                    .setTranslationY(100)
+                    .show();
         }
 
         protected Bitmap doInBackground(Integer... params) {
@@ -654,13 +736,15 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 i.setDataAndType(uri, "image/jpeg");
                 i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 i.putExtra("mimeType", "image/jpeg");
-                startActivity(Intent.createChooser(i, "Set As"));
+                startActivity(Intent.createChooser(i, getResources().getString(R.string.set_as)));
 
             } catch (OutOfMemoryError e) {
                 Crashlytics.logException(e);
+                mLoadToast.error();
                 return null;
             } catch (IOException e) {
                 Crashlytics.logException(e);
+                mLoadToast.error();
             }
             return bitmap;
         }
@@ -668,18 +752,18 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
-            progressDialog.cancel();
+            mLoadToast.success();
             running = false;
         }
     }
 
     // Analytics
-    private void initAnalytics() {
+//    private void initAnalytics() {
 //        Tracker t = ((Analytics)getApplication()).getTracker(Analytics.TrackerName.APP_TRACKER);
 //        t.setScreenName("Wallpaper");
 //        t.send(new HitBuilders.AppViewBuilder().build());
-
-    }
+//
+//    }
 
     // TOAST
     private void done() {
@@ -697,34 +781,34 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         nd.setAnimation(android.R.anim.fade_in, android.R.anim.slide_out_right);
         nd.show();
     }
-
-    private void noInternetMessage() {
-        AppMsg nc = AppMsg.makeText(this, R.string.no_connect, AppMsg.STYLE_ALERT);
-        nc.setParent(R.id.fam);
-        nc.setDuration(AppMsg.LENGTH_SHORT);
-        nc.setAnimation(android.R.anim.fade_in, android.R.anim.slide_out_right);
-        nc.show();
-    }
-
-    private void otherLink() {
-        Intent semen = new Intent(Intent.ACTION_VIEW, Uri.parse(link_other_apps));
-        startActivity(semen);
-        Answers.getInstance().logCustom(new CustomEvent("other link"));
-    }
-
-    private void share() {
-        Answers.getInstance().logShare(new ShareEvent()
-        .putMethod("share")
-        .putContentName("sharing link")
-        .putContentType("link on Google play")
-        .putContentId("link"));
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        // Тут тоже надо ссылку заменить на актуальную
-        sendIntent.putExtra(Intent.EXTRA_TEXT, " #Download #Elite #Wallpapers on #Google #Play - тут должна быть ссылка");
-        sendIntent.setType("text/plain");
-        startActivity(sendIntent);
-    }
+//
+//    private void noInternetMessage() {
+//        AppMsg nc = AppMsg.makeText(this, R.string.no_connect, AppMsg.STYLE_ALERT);
+//        nc.setParent(R.id.fam);
+//        nc.setDuration(AppMsg.LENGTH_SHORT);
+//        nc.setAnimation(android.R.anim.fade_in, android.R.anim.slide_out_right);
+//        nc.show();
+//    }
+//
+//    private void otherLink() {
+//        Intent semen = new Intent(Intent.ACTION_VIEW, Uri.parse(link_other_apps));
+//        startActivity(semen);
+//        Answers.getInstance().logCustom(new CustomEvent("other link"));
+//    }
+//
+//    private void share() {
+//        Answers.getInstance().logShare(new ShareEvent()
+//        .putMethod("share")
+//        .putContentName("sharing link")
+//        .putContentType("link on Google play")
+//        .putContentId("link"));
+//        Intent sendIntent = new Intent();
+//        sendIntent.setAction(Intent.ACTION_SEND);
+//        // Тут тоже надо ссылку заменить на актуальную
+//        sendIntent.putExtra(Intent.EXTRA_TEXT, " #Download #Elite #Wallpapers on #Google #Play - тут должна быть ссылка");
+//        sendIntent.setType("text/plain");
+//        startActivity(sendIntent);
+//    }
 
     private void dialogShow() {
 
@@ -749,7 +833,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private void showAboutPermission() {
-        PreferencesHelper.markWelcomeDone(this);
+        PreferencesHelper.INSTANCE$.markWelcomeDone(this);
         final View customView;
 
         try {
@@ -836,7 +920,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 }
                 if (mPrefs.getBoolean("gapps", true)) {
                     tbCont.setVisibility(View.VISIBLE);
-                    buyButton.setVisibility(View.VISIBLE);
+//                    buyButton.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -857,7 +941,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
         if (tbCont.getVisibility() == View.VISIBLE) {
             tbCont.setVisibility(View.GONE);
-            buyButton.setVisibility(View.GONE);
+//            buyButton.setVisibility(View.GONE);
         }
     }
 
@@ -894,42 +978,41 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             public void onAdLoaded() {
                 super.onAdLoaded();
                 initShowADS();
-                requestNewInterstitial();
             }
         });
         mAdView.loadAd(adRequest);
     }
 
-    private void requestNewInterstitial() {
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(INTERSTITAL_KEY);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("5DQOOZ4HKJ95S85L")
-                .addTestDevice("TA17606LXJ")
-                .addTestDevice("TA2470I7O")
-                .build();
-        mInterstitialAd.loadAd(adRequest);
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-                Crashlytics.log("Interstitial on Ad Closed");
-            }
-
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                super.onAdFailedToLoad(errorCode);
-                Crashlytics.log("Interstitial Failed To Load: " + errorCode);
-            }
-
-            @Override
-            public void onAdOpened() {
-                super.onAdOpened();
-                showThksToast();
-                Answers.getInstance().logCustom(new CustomEvent("Interstitial Click"));
-            }
-        });
-    }
+//    private void requestNewInterstitial() {
+//        mInterstitialAd = new InterstitialAd(this);
+//        mInterstitialAd.setAdUnitId(INTERSTITAL_KEY);
+//        AdRequest adRequest = new AdRequest.Builder()
+//                .addTestDevice("5DQOOZ4HKJ95S85L")
+//                .addTestDevice("TA17606LXJ")
+//                .addTestDevice("TA2470I7O")
+//                .build();
+//        mInterstitialAd.loadAd(adRequest);
+//        mInterstitialAd.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdClosed() {
+//                super.onAdClosed();
+//                Crashlytics.log("Interstitial on Ad Closed");
+//            }
+//
+//            @Override
+//            public void onAdFailedToLoad(int errorCode) {
+//                super.onAdFailedToLoad(errorCode);
+//                Crashlytics.log("Interstitial Failed To Load: " + errorCode);
+//            }
+//
+//            @Override
+//            public void onAdOpened() {
+//                super.onAdOpened();
+//                showThksToast();
+//                Answers.getInstance().logCustom(new CustomEvent("Interstitial Click"));
+//            }
+//        });
+//    }
 
     private void showThksToast() {
         runOnUiThread(new Runnable() {
@@ -941,90 +1024,90 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     // INIT BILLING
-    private void initBilling() {
-        mHelper = new IabHelper(this, LICENSE_KEY);
-        mHelper.enableDebugLogging(true);
-        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-            public void onIabSetupFinished(IabResult result) {
-                if (!result.isSuccess()) {
-                    Crashlytics.log("Problem setting up in-app billing: " + result);
-                    return;
-                }
-
-                if (mHelper == null) return;
-
-                mHelper.queryInventoryAsync(mGotInventoryListener);
-            }
-        });
-    }
-
-    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
-        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
-
-            if (mHelper == null) return;
-
-            // Is it a failure?
-            if (result.isFailure()) {
-
-                return;
-            }
-
-            Purchase purchase = inventory.getPurchase(ADS_DISABLE);
-            PreferencesHelper.savePurchase(getApplicationContext(), PreferencesHelper.Purchase.DISABLE_ADS, purchase != null && verifyDeveloperPayload(purchase));
-            if (!PreferencesHelper.isAdsDisabled()) {
-                initADS();
-            } else if (fl.getVisibility() == View.VISIBLE) {
-                disableShowADS();
-            } else {
-                Crashlytics.log("Just Fuck mGotInvertoryListener");
-            }
-        }
-    };
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    /** Verifies the developer payload of a purchase. */
-    boolean verifyDeveloperPayload(Purchase p) {
-        String payload = p.getDeveloperPayload();
-
-        Crashlytics.log("verifyDeveloperPayload: " + payload);
-		/*
-		 * TODO: здесь когда нибудб будет верификация
-		 * возможно даже со своим сервером
-		 */
-
-        return true;
-    }
-
-    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
-        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-
-            if (result.isFailure()) {
-                return;
-            }
-            if (!verifyDeveloperPayload(purchase)) {
-                return;
-            }
-
-            if (purchase.getSku().equals(ADS_DISABLE)) {
-
-                PreferencesHelper.savePurchase(getApplication(), PreferencesHelper.Purchase.DISABLE_ADS, true);
-                if (!PreferencesHelper.isAdsDisabled()) {
-                    initADS();
-                } else if (fl.getVisibility() == View.VISIBLE) {
-                    disableShowADS();
-                } else {
-                    Crashlytics.log("Just Fuck mPurchaseFinishedListener");
-                }
-            }
-        }
-    };
+//    private void initBilling() {
+//        mHelper = new IabHelper(this, LICENSE_KEY);
+//        mHelper.enableDebugLogging(true);
+//        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+//            public void onIabSetupFinished(IabResult result) {
+//                if (!result.isSuccess()) {
+//                    Crashlytics.log("Problem setting up in-app billing: " + result);
+//                    return;
+//                }
+//
+//                if (mHelper == null) return;
+//
+//                mHelper.queryInventoryAsync(mGotInventoryListener);
+//            }
+//        });
+//    }
+//
+//    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
+//        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
+//
+//            if (mHelper == null) return;
+//
+//            // Is it a failure?
+//            if (result.isFailure()) {
+//
+//                return;
+//            }
+//
+//            Purchase purchase = inventory.getPurchase(ADS_DISABLE);
+//            PreferencesHelper.INSTANCE$.savePurchase(getApplicationContext(), PreferencesHelper.Purchase.DISABLE_ADS, purchase != null && verifyDeveloperPayload(purchase));
+//            if (!PreferencesHelper.INSTANCE$.isAdsDisabled()) {
+//                initADS();
+//            } else if (fl.getVisibility() == View.VISIBLE) {
+//                disableShowADS();
+//            } else {
+//                Crashlytics.log("Just Fuck mGotInvertoryListener");
+//            }
+//        }
+//    };
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//        if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
+//            super.onActivityResult(requestCode, resultCode, data);
+//        }
+//    }
+//
+//    /** Verifies the developer payload of a purchase. */
+//    boolean verifyDeveloperPayload(Purchase p) {
+//        String payload = p.getDeveloperPayload();
+//
+//        Crashlytics.log("verifyDeveloperPayload: " + payload);
+//		/*
+//		 * TODO: здесь когда нибудб будет верификация
+//		 * возможно даже со своим сервером
+//		 */
+//
+//        return true;
+//    }
+//
+//    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
+//        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
+//
+//            if (result.isFailure()) {
+//                return;
+//            }
+//            if (!verifyDeveloperPayload(purchase)) {
+//                return;
+//            }
+//
+//            if (purchase.getSku().equals(ADS_DISABLE)) {
+//
+//                PreferencesHelper.INSTANCE$.savePurchase(getApplication(), PreferencesHelper.Purchase.DISABLE_ADS, true);
+//                if (!PreferencesHelper.INSTANCE$.isAdsDisabled()) {
+//                    initADS();
+//                } else if (fl.getVisibility() == View.VISIBLE) {
+//                    disableShowADS();
+//                } else {
+//                    Crashlytics.log("Just Fuck mPurchaseFinishedListener");
+//                }
+//            }
+//        }
+//    };
 
     /**
      * also, to good time
