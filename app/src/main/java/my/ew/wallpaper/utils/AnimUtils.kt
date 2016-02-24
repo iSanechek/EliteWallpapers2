@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 /**
  * Created by isanechek on 09.08.15.
  */
-class AnimUtils(private val vv: View, duration: Int, private val mType: Int) : Animation() {
+class AnimUtils(val vv: View, duration: Int, val mType: Int) : Animation() {
     private var endHeight: Int = 0
     private val lp: LinearLayout.LayoutParams
 

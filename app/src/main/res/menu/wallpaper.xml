@@ -11,10 +11,10 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
 
-    <!--<item android:id="@+id/share"-->
-        <!--android:title="@string/share"-->
-        <!--android:orderInCategory="100"-->
-        <!--app:showAsAction="never" />-->
+    <item android:id="@+id/share"
+        android:title="@string/share"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 
     <item android:id="@+id/settings"
         android:title="@string/app_setting"

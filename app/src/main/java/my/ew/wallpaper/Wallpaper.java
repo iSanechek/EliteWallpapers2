@@ -62,6 +62,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
+import com.crashlytics.android.answers.ShareEvent;
 import com.devspark.appmsg.AppMsg;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -153,16 +154,16 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         mPrefs = getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE);
         PreferenceManager.setDefaultValues(this, R.xml.settings, true);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        PreferencesHelper.INSTANCE$.loadSettings(this);
+        PreferencesHelper.INSTANCE.loadSettings(this);
 
 //        initAnalytics();
 
-        if (!PreferencesHelper.INSTANCE$.isWelcomeDone(this)){
+        if (!PreferencesHelper.INSTANCE.isWelcomeDone(this)){
             showAboutPermission();
             Answers.getInstance().logCustom(new CustomEvent("First start"));
         }
 
-        if (HelperUtil.INSTANCE$.isOnline(this)) {
+        if (HelperUtil.INSTANCE.isOnline(this)) {
             initADS();
         }
 
@@ -238,9 +239,9 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 case R.id.settings:
                     settingShow();
                     break;
-//            case R.id.share:
-//                share();
-//                break;
+            case R.id.share:
+                share();
+                break;
             default:
                 break;
 			}
@@ -288,7 +289,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     @Override
     protected void onResume() {
         super.onResume();
-        if (!PreferencesHelper.INSTANCE$.isAdsDisabled()) {
+        if (!PreferencesHelper.INSTANCE.isAdsDisabled()) {
             if (mAdView != null) {
                 mAdView.resume();
             }
@@ -299,7 +300,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     
     @Override
     public void onPause() {
-        if (!PreferencesHelper.INSTANCE$.isAdsDisabled()) {
+        if (!PreferencesHelper.INSTANCE.isAdsDisabled()) {
             if (mAdView != null) {
                 mAdView.pause();
             }
@@ -325,7 +326,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
     @Override
     protected void onDestroy() {
-        if (!PreferencesHelper.INSTANCE$.isAdsDisabled()) {
+        if (!PreferencesHelper.INSTANCE.isAdsDisabled()) {
             if (mAdView != null) {
                 mAdView.destroy();
             }
@@ -571,7 +572,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private void cropAndSetMethod(int position) {
-        cropImageAndSetWallpaper(mImages.get(position));
+        cropImageAndSetWallpaper(position);
         done();
         Crashlytics.log("crop true");
     }
@@ -796,19 +797,19 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 //        Answers.getInstance().logCustom(new CustomEvent("other link"));
 //    }
 //
-//    private void share() {
-//        Answers.getInstance().logShare(new ShareEvent()
-//        .putMethod("share")
-//        .putContentName("sharing link")
-//        .putContentType("link on Google play")
-//        .putContentId("link"));
-//        Intent sendIntent = new Intent();
-//        sendIntent.setAction(Intent.ACTION_SEND);
-//        // Тут тоже надо ссылку заменить на актуальную
-//        sendIntent.putExtra(Intent.EXTRA_TEXT, " #Download #Elite #Wallpapers on #Google #Play - тут должна быть ссылка");
-//        sendIntent.setType("text/plain");
-//        startActivity(sendIntent);
-//    }
+    private void share() {
+        Answers.getInstance().logShare(new ShareEvent()
+        .putMethod("share")
+        .putContentName("sharing link")
+        .putContentType("link on Google play")
+        .putContentId("link"));
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        // Тут тоже надо ссылку заменить на актуальную
+        sendIntent.putExtra(Intent.EXTRA_TEXT, " #Download #Elite #Wallpapers on #Google #Play - https://play.google.com/store/apps/dev?id=6812241770877419123");
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
+    }
 
     private void dialogShow() {
 
@@ -833,7 +834,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private void showAboutPermission() {
-        PreferencesHelper.INSTANCE$.markWelcomeDone(this);
+        PreferencesHelper.INSTANCE.markWelcomeDone(this);
         final View customView;
 
         try {
@@ -911,7 +912,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             @Override
             public void run() {
                 if (fl.getVisibility() == View.GONE) {
-                    AnimUtils startAH = new AnimUtils(fl, 1500, AnimUtils.EXPAND);
+                    AnimUtils startAH = new AnimUtils(fl, 1500, AnimUtils.Companion.getEXPAND());
                     startAH.setHeight(aHeight);
                     fl.startAnimation(startAH);
                 }
@@ -930,7 +931,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private void disableShowADS() {
         Crashlytics.log("disableShowADS");
         if (fl.getVisibility() == View.VISIBLE) {
-            AnimUtils helper = new AnimUtils(fl, 1000, AnimUtils.COLLAPSED);
+            AnimUtils helper = new AnimUtils(fl, 1000, AnimUtils.Companion.getCOLLAPSED());
             aHeight = helper.getHeight();
             fl.startAnimation(helper);
         }

@@ -46,7 +46,7 @@ object PreferencesHelper {
         Log.d(TAG, "loadSettings")
 
         val settings = c.getSharedPreferences(SETTINGS, 0)
-        if (settings.getAll().size() == 0) {
+        if (settings.getAll().size !=  0) {
             val editor = settings.edit()
             editor.clear()
             editor.apply()
