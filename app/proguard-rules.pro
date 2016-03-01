@@ -26,9 +26,7 @@
 -dontwarn com.crashlytics.**
 
 # Kotlin
--keepclassmembers public class com.cypressworks.kotlinreflectionproguard.** {
-    public * *;
-}
+-dontwarn kotlin.**
 
 
 # keep setters in Views so that animations can still work.

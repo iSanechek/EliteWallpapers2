@@ -2,10 +2,6 @@ package my.ew.wallpaper.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
-
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GooglePlayServicesUtil
 
 object HelperUtil {
 

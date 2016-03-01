@@ -59,7 +59,6 @@ object PreferencesHelper {
         }
     }
 
-
     fun isWelcomeDone(context: Context): Boolean {
             val sp = PreferenceManager.getDefaultSharedPreferences(context)
             return sp.getBoolean(PREF_WELCOME_DONE, false)

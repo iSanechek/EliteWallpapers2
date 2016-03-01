@@ -19,6 +19,8 @@
     <string name="about_text">This is a small application\nwritten specifically\nfor fans of the brand\n<b>Motorola</b>!</string>
     <string name="awerd">AwerdMedia</string>
     <string name="thanks_for_click">Thanks. :))</string>
+    <string name="analytics">Analytics</string>
+    <string name="by">by</string>
 
     <!--Settings-->
     <string name="app_setting">Settings</string>
