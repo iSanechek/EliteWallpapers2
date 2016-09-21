@@ -147,8 +147,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         setContentView(R.layout.activity_wallpaper);
         initUI();
 
-        Fabric.with(this, new Crashlytics());
-
         mLoadToast = new LoadToast(this);
 
         mPrefs = getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE);

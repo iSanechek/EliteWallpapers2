@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Elite Wallpaper HD</string>
+    <string name="app_label">Elite Wallpaper HD</string>
+    <string name="set_wallpaper">Set wallpaper</string>
+    <string name="no_wallpaper">No wallpaper</string>
+    <string name="link_other_app">Other apps</string>
+    <string name="share">Share!</string>
+    <string name="about">About</string>
+    <string name="warning">Warning</string>
+    <string name="no_wallpapers_message">Black picture to save battery power.\nThe most effective on AMOLED display.</string>
+    <string name="ad_nw_yes_btn">Yes</string>
+    <string name="ad_nw_no_btn">No</string>
+    <string name="img_install_done">Done</string>
+    <string name="negative_button_clicked">Ok! You boss!</string>
+    <string name="about_moto">Elite</string>
+    <string name="about_moto_second">Wallpapers</string>
+    <string name="about_text">This is a small application\nwritten specifically\nfor fans of the brand\n<b>Motorola</b>!</string>
+    <string name="by">by</string>
+    <string name="awerd">AwerdMedia</string>
+    <string name="thanks_for_click">Thanks for click</string>
+    <string name="analytics">Analytics</string>
+</resources>
