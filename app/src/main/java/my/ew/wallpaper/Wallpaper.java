@@ -49,6 +49,7 @@ import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Gallery;
 import android.widget.ImageView;
@@ -127,18 +128,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private AdView mAdView;
 //    private InterstitialAd mInterstitialAd;
 
-
-    /**
-     * to good time
-     */
-//    private static final char[] symbols = new char[36];
-//    static {
-//        for (int idx = 0; idx < 10; ++idx)
-//            symbols[idx] = (char) ('0' + idx);
-//        for (int idx = 10; idx < 36; ++idx)
-//            symbols[idx] = (char) ('a' + idx - 10);
-//    }
-
     @SuppressWarnings("deprecation")
 	@Override
     public void onCreate(Bundle icicle) {
@@ -153,6 +142,14 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         PreferenceManager.setDefaultValues(this, R.xml.settings, true);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         PreferencesHelper.INSTANCE.loadSettings(this);
+
+        Button button = (Button) findViewById(R.id.set);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSetWallpapers(v);
+            }
+        });
 
 //        initAnalytics();
 
@@ -259,8 +256,8 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private void findWallpapers() {
-        mThumbs = new ArrayList<Integer>(24);
-        mImages = new ArrayList<Integer>(24);
+        mThumbs = new ArrayList<>(24);
+        mImages = new ArrayList<>(24);
 
         final Resources resources = getResources();
         final String packageName = getApplication().getPackageName();
@@ -503,7 +500,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
      *  FINISH MAGIC
      */
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void selectWallpaper(int position) {
         if (mIsWallpaperSet) {
             return;
@@ -572,7 +568,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private void cropAndSetMethod(int position) {
         cropImageAndSetWallpaper(position);
         done();
-//        Crashlytics.log("crop true");
     }
 
     private void cropImgTask(int position) {
@@ -694,7 +689,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     class CreateBitmap extends AsyncTask<Integer, Void, Bitmap> {
 
         boolean running;
-
 
         @Override
         protected void onPreExecute() {
@@ -1108,27 +1102,4 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 //            }
 //        }
 //    };
-
-    /**
-     * also, to good time
-     */
-//    public class RandomString {
-//
-//        private final Random random = new Random();
-//
-//        private final char[] buf;
-//
-//        public RandomString(int length) {
-//            if (length < 1)
-//                throw new IllegalArgumentException("length < 1: " + length);
-//            buf = new char[length];
-//        }
-//
-//        public String nextString() {
-//            for (int idx = 0; idx < buf.length; ++idx)
-//                buf[idx] = symbols[random.nextInt(symbols.length)];
-//            return new String(buf);
-//        }
-//
-//    }
 }
