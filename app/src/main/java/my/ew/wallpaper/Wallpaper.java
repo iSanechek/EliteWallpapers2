@@ -58,11 +58,11 @@ import android.widget.Toast;
 import static android.os.Build.VERSION.SDK_INT;
 import static android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
-import com.crashlytics.android.answers.CustomEvent;
-import com.crashlytics.android.answers.ShareEvent;
+//import com.crashlytics.android.Crashlytics;
+//import com.crashlytics.android.answers.Answers;
+//import com.crashlytics.android.answers.ContentViewEvent;
+//import com.crashlytics.android.answers.CustomEvent;
+//import com.crashlytics.android.answers.ShareEvent;
 import com.devspark.appmsg.AppMsg;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -71,7 +71,7 @@ import com.google.android.gms.ads.AdView;
 import net.steamcrafted.loadtoast.LoadToast;
 
 import info.hoang8f.widget.FButton;
-import io.fabric.sdk.android.Fabric;
+//import io.fabric.sdk.android.Fabric;
 import my.elite.wallpapers.R;
 import my.ew.wallpaper.settings.OldSettingsActivity;
 import my.ew.wallpaper.settings.SettingsActivity;
@@ -158,7 +158,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
         if (!PreferencesHelper.INSTANCE.isWelcomeDone(this)){
             showAboutPermission();
-            Answers.getInstance().logCustom(new CustomEvent("First start"));
+//            Answers.getInstance().logCustom(new CustomEvent("First start"));
         }
 
         if (HelperUtil.INSTANCE.isOnline(this)) {
@@ -251,7 +251,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         switch (view.getId()) {
             case R.id.set:
                 selectWallpaper(mGallery.getSelectedItemPosition());
-                Answers.getInstance().logCustom(new CustomEvent("onSetWallpapers"));
+//                Answers.getInstance().logCustom(new CustomEvent("onSetWallpapers"));
                 break;
             default:
                 break;
@@ -572,7 +572,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private void cropAndSetMethod(int position) {
         cropImageAndSetWallpaper(position);
         done();
-        Crashlytics.log("crop true");
+//        Crashlytics.log("crop true");
     }
 
     private void cropImgTask(int position) {
@@ -629,9 +629,9 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             if (thumbDrawable != null) {
                 thumbDrawable.setDither(true);
             } else {
-                Crashlytics.log(String.format(
-                        "Error decoding thumbnail resId=%d for wallpaper #%d",
-                        thumbRes, position));
+//                Crashlytics.log(String.format(
+//                        "Error decoding thumbnail resId=%d for wallpaper #%d",
+//                        thumbRes, position));
             }
             return image;
         }
@@ -654,7 +654,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 return BitmapFactory.decodeResource(getResources(),
                         mImages.get(params[0]), mOptions);
             } catch (OutOfMemoryError e) {
-                Crashlytics.logException(e);
+//                Crashlytics.logException(e);
                 return null;
             }            
         }
@@ -738,11 +738,11 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 startActivity(Intent.createChooser(i, getResources().getString(R.string.set_as)));
 
             } catch (OutOfMemoryError e) {
-                Crashlytics.logException(e);
+//                Crashlytics.logException(e);
                 mLoadToast.error();
                 return null;
             } catch (IOException e) {
-                Crashlytics.logException(e);
+//                Crashlytics.logException(e);
                 mLoadToast.error();
             }
             return bitmap;
@@ -796,11 +796,11 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 //    }
 //
     private void share() {
-        Answers.getInstance().logShare(new ShareEvent()
-        .putMethod("share")
-        .putContentName("sharing link")
-        .putContentType("link on Google play")
-        .putContentId("link"));
+//        Answers.getInstance().logShare(new ShareEvent()
+//        .putMethod("share")
+//        .putContentName("sharing link")
+//        .putContentType("link on Google play")
+//        .putContentId("link"));
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         // Тут тоже надо ссылку заменить на актуальную
@@ -864,7 +864,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                     , "text/html", "UTF-8");
         } catch (Throwable e) {
             webView.loadData("<h1>Unable to load</h1><p>" + e.getLocalizedMessage() + "</p>", "text/html", "UTF-8");
-            Crashlytics.logException(e);
+//            Crashlytics.logException(e);
         }
     }
 
@@ -890,22 +890,23 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
     }
 
+    @TargetApi(Build.VERSION_CODES.ECLAIR)
     private void noWallpapers() {
-        Answers.getInstance().logCustom(new CustomEvent("No Wallpaper"));
+//        Answers.getInstance().logCustom(new CustomEvent("No Wallpaper"));
         try {
             WallpaperManager wm = WallpaperManager.getInstance(this);
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.black);
             wm.setBitmap(bitmap);
         } catch (IOException e) {
-            Crashlytics.logException(e);
+//            Crashlytics.logException(e);
         }
 
     }
 
     private void initShowADS() {
-        Answers.getInstance().logContentView(new ContentViewEvent()
-        .putContentName("initShowADS")
-        .putContentType("Ads Layout Show"));
+//        Answers.getInstance().logContentView(new ContentViewEvent()
+//        .putContentName("initShowADS")
+//        .putContentType("Ads Layout Show"));
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -927,7 +928,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private void disableShowADS() {
-        Crashlytics.log("disableShowADS");
+//        Crashlytics.log("disableShowADS");
         if (fl.getVisibility() == View.VISIBLE) {
             AnimUtils helper = new AnimUtils(fl, 1000, AnimUtils.Companion.getCOLLAPSED());
             aHeight = helper.getHeight();
@@ -957,20 +958,20 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             @Override
             public void onAdClosed() {
                 super.onAdClosed();
-                Crashlytics.log("onAdClosed");
+//                Crashlytics.log("onAdClosed");
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 super.onAdFailedToLoad(errorCode);
-                Crashlytics.log("Banner Failed To Load: " + errorCode);
+//                Crashlytics.log("Banner Failed To Load: " + errorCode);
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
                 showThksToast();
-                Answers.getInstance().logCustom(new CustomEvent("Click on ads"));
+//                Answers.getInstance().logCustom(new CustomEvent("Click on ads"));
             }
 
             @Override

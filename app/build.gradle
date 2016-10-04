@@ -2,20 +2,20 @@ buildscript {
     ext.kotlin_version = '1.0.3'
     repositories {
         mavenCentral()
-        maven { url 'https://maven.fabric.io/public' }
+//        maven { url 'https://maven.fabric.io/public' }
     }
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.21.7'
+//        classpath 'io.fabric.tools:gradle:1.21.7'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
+//apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 
 repositories {
     mavenCentral()
-    maven { url 'https://maven.fabric.io/public' }
+//    maven { url 'https://maven.fabric.io/public' }
 }
 
 android {
@@ -39,47 +39,17 @@ android {
         }
         debug {
             debuggable true
-            ext.enableCrashlytics = false
-        }
-    }
-    productFlavors {
-
-        eliteWp {
-
-        }
-
-        otherWp {
-
-        }
-
-    }
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDir = ['src']
-            resources.srcDir = ['src']
-            aidl.srcDir = ['src']
-            res.srcDir = ['src']
-            assets.srcDir = ['src']
-        }
-
-        other {
-            manifest.srcFile 'other/AndroidManifest.xml'
-            java.srcDir = ['src']
-            resources.srcDir = ['src']
-            aidl.srcDir = ['src']
-            res.srcDir = ['src']
-            assets.srcDir = ['src']
+//            ext.enableCrashlytics = false
         }
     }
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services-ads:9.4.0'
+    compile 'com.google.android.gms:play-services-ads:9.6.1'
     compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.3@aar') {
-        transitive = true;
-    }
+//    compile('com.crashlytics.sdk.android:crashlytics:2.6.3@aar') {
+//        transitive = true;
+//    }
     compile 'com.android.support:support-v4:24.2.1'
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support:design:24.2.1'

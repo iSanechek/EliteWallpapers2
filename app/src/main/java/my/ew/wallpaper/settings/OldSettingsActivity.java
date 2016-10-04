@@ -11,10 +11,10 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.webkit.WebView;
-
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
+//
+//import com.crashlytics.android.Crashlytics;
+//import com.crashlytics.android.answers.Answers;
+//import com.crashlytics.android.answers.ContentViewEvent;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -47,9 +47,9 @@ public class OldSettingsActivity extends PreferenceActivity {
 //                Log.d(LOG_TAG, "onPrefClick About us");
                 final View cv;
 
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("Dialog")
-                        .putContentType("Old About Dialog"));
+//                Answers.getInstance().logContentView(new ContentViewEvent()
+//                        .putContentName("Dialog")
+//                        .putContentType("Old About Dialog"));
 
                 try {
                     cv = LayoutInflater.from(OldSettingsActivity.this).inflate(R.layout.about_activity, null);
@@ -161,9 +161,9 @@ public class OldSettingsActivity extends PreferenceActivity {
             public boolean onPreferenceClick(Preference preference) {
                 final View customView;
 
-                Answers.getInstance().logContentView(new ContentViewEvent()
-                        .putContentName("Dialog")
-                        .putContentType("Old What Is New Dialog"));
+//                Answers.getInstance().logContentView(new ContentViewEvent()
+//                        .putContentName("Dialog")
+//                        .putContentType("Old What Is New Dialog"));
 
                 try {
                     customView = LayoutInflater.from(OldSettingsActivity.this).inflate(R.layout.dialog_webview, null);
@@ -194,7 +194,7 @@ public class OldSettingsActivity extends PreferenceActivity {
                             , "text/html", "UTF-8");
                 } catch (Throwable e) {
                     webView.loadData("<h1>Unable to load</h1><p>" + e.getLocalizedMessage() + "</p>", "text/html", "UTF-8");
-                    Crashlytics.logException(e);
+//                    Crashlytics.logException(e);
                 }
                 return false;
             }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <string name="app_name">Elite Wallpaper HD</string>
-    <string name="app_label">Elite Wallpaper HD</string>
+    <string name="app_name">Other Wallpaper HD</string>
+    <string name="app_label">Other Wallpaper HD</string>
     <string name="set_wallpaper">Set wallpaper</string>
     <string name="no_wallpaper">No wallpaper</string>
     <string name="link_other_app">Other apps</string>
