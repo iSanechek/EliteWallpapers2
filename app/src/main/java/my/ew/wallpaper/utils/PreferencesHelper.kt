@@ -19,6 +19,7 @@ object PreferencesHelper {
 
     private var disabledADS: Boolean = false
 
+    @JvmStatic
     fun isAdsDisabled(): Boolean {
         Log.d(TAG, "boolean isAdsDisabled")
         return disabledADS
@@ -42,11 +43,12 @@ object PreferencesHelper {
         editor.apply()
     }
 
+    @JvmStatic
     fun loadSettings(c: Context) {
         Log.d(TAG, "loadSettings")
 
         val settings = c.getSharedPreferences(SETTINGS, 0)
-        if (settings.getAll().size !=  0) {
+        if (settings.all.isNotEmpty()) {
             val editor = settings.edit()
             editor.clear()
             editor.apply()
@@ -59,13 +61,15 @@ object PreferencesHelper {
         }
     }
 
+    @JvmStatic
     fun isWelcomeDone(context: Context): Boolean {
             val sp = PreferenceManager.getDefaultSharedPreferences(context)
             return sp.getBoolean(PREF_WELCOME_DONE, false)
         }
 
+    @JvmStatic
     fun markWelcomeDone(context: Context) {
             val sp = PreferenceManager.getDefaultSharedPreferences(context)
-            sp.edit().putBoolean(PREF_WELCOME_DONE, true).commit()
+            sp.edit().putBoolean(PREF_WELCOME_DONE, true).apply()
         }
 }

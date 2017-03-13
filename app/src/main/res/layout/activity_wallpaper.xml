@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,7 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                tools:ignore="ContentDescription"/>
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,11 +77,8 @@
                     android:id="@+id/adView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_alignParentBottom="true"
                     ads:adSize="SMART_BANNER"
-                    ads:adUnitId="ca-app-pub-6423555452159863/3478299030"
-                    android:visibility="gone" >
+                    ads:adUnitId="ca-app-pub-6423555452159863/3478299030">
                 </com.google.android.gms.ads.AdView>
             </LinearLayout>
         </LinearLayout>
