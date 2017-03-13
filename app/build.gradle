@@ -1,37 +1,64 @@
-buildscript {
-    ext.kotlin_version = '1.0.3'
-    repositories {
-        mavenCentral()
-//        maven { url 'https://maven.fabric.io/public' }
-    }
-    dependencies {
-//        classpath 'io.fabric.tools:gradle:1.21.7'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
 apply plugin: 'com.android.application'
-//apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
-
-repositories {
-    mavenCentral()
-//    maven { url 'https://maven.fabric.io/public' }
-}
+apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+
+    def versionPropsFile = file('version.properties')
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        def value = 0
+
+        def runTasks = gradle.startParameter.taskNames
+        if ('assemble' in runTasks || 'assembleRelease' in runTasks || 'aR' in runTasks) {
+            value = 1;
+        }
+
+        def versionMajor = 5
+        def versionMinor = 2
+        def versionPatch = versionProps['VERSION_PATCH'].toInteger() + value
+        def versionBuild = versionProps['VERSION_BUILD'].toInteger() + 1
+        def versionNumber = versionProps['VERSION_NUMBER'].toInteger() + value
+
+        versionProps['VERSION_PATCH'] = versionPatch.toString()
+        versionProps['VERSION_BUILD'] = versionBuild.toString()
+        versionProps['VERSION_NUMBER'] = versionNumber.toString()
+
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        defaultConfig {
+            applicationId 'my.ew.wallpaper'
+            minSdkVersion 15
+            targetSdkVersion 25
+            versionCode versionNumber
+            versionName "${versionMajor}.${versionMinor}.${versionPatch} (${versionBuild})"
+            vectorDrawables.useSupportLibrary = true
+//        versionCode 70
+//        versionName '5.1.6'
+        }
+
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                def fileNaming = "apk/EliteWallpaper"
+                def outputFile = output.outputFile
+                if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                    output.outputFile = new File(getProject().getRootDir(), "${fileNaming}-${versionMajor}.${versionMinor}.${versionPatch}-${outputFile.name}")
+                }
+            }
+        }
+    } else {
+        throw new GradleException("Could not read version.properties!")
+    }
     dexOptions {
         dexInProcess = true
         preDexLibraries = true
     }
-    defaultConfig {
-        applicationId 'my.ew.wallpaper'
-        minSdkVersion 10
-        targetSdkVersion 24
-        versionCode 70
-        versionName '5.1.6'
-    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -39,21 +66,40 @@ android {
         }
         debug {
             debuggable true
-//            ext.enableCrashlytics = false
         }
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += 'src/main/java'
     }
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services-ads:9.6.1'
+    compile 'com.google.android.gms:play-services-ads:10.2.0'
     compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
-//    compile('com.crashlytics.sdk.android:crashlytics:2.6.3@aar') {
-//        transitive = true;
-//    }
-    compile 'com.android.support:support-v4:24.2.1'
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:design:24.2.1'
+    compile "com.android.support:appcompat-v7:$support_version"
+    compile "com.android.support:support-v4:$support_version"
+    compile "com.android.support:design:$support_version"
     compile 'net.steamcrafted:load-toast:1.0.9'
     compile 'info.hoang8f:fbutton:1.0.5'
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "com.andkulikov:transitionseverywhere:1.7.0"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+}
+
+buildscript {
+    ext.kotlin_version = '1.1.0'
+    ext.support_version = '25.2.0'
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
 }
