@@ -14,3 +14,4 @@ captures
 awerd
 .gitignore
 app/src/main/res/drawable-nodpi
+/apk/

@@ -83,13 +83,13 @@ dependencies {
     compile "com.android.support:design:$support_version"
     compile 'net.steamcrafted:load-toast:1.0.9'
     compile 'info.hoang8f:fbutton:1.0.5'
-    compile "com.andkulikov:transitionseverywhere:1.7.0"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+//    compile "com.andkulikov:transitionseverywhere:1.7.0"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 buildscript {
-    ext.kotlin_version = '1.1.0'
-    ext.support_version = '25.2.0'
+    ext.kotlin_version = '1.1.1'
+    ext.support_version = '25.3.0'
     repositories {
         jcenter()
     }

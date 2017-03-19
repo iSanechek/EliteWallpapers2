@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,15 +30,18 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
 
+import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -56,8 +58,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
 import static my.ew.wallpaper.utils.PreferencesHelper.isAdsDisabled;
 
 //import com.crashlytics.android.Crashlytics;
@@ -72,10 +72,8 @@ import com.google.android.gms.ads.AdView;
 
 import net.steamcrafted.loadtoast.LoadToast;
 
-import info.hoang8f.widget.FButton;
 //import io.fabric.sdk.android.Fabric;
 import my.elite.wallpapers.R;
-import my.ew.wallpaper.settings.OldSettingsActivity;
 import my.ew.wallpaper.settings.SettingsActivity;
 import my.ew.wallpaper.task.BitmapCropTask;
 import my.ew.wallpaper.utils.AnimUtils;
@@ -118,7 +116,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private CreateBitmap createBitmap;
     private LinearLayout fl;
     private CoordinatorLayout mCoordinatorLayout;
-//    private ImageButton buyButton;
     private FrameLayout tbCont;
     private LoadToast mLoadToast;
 
@@ -128,6 +125,10 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private AdView mAdView;
 //    private InterstitialAd mInterstitialAd;
 
+    private void msg(String message) {
+        Log.e(">>>TEST<<<", message);
+    }
+
     @SuppressWarnings("deprecation")
 	@Override
     public void onCreate(Bundle icicle) {
@@ -135,6 +136,8 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         findWallpapers();
         setContentView(R.layout.activity_wallpaper);
         initUI();
+
+        msg("Create");
 
         mLoadToast = new LoadToast(this);
 
@@ -153,9 +156,8 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
 //        initAnalytics();
 
-        if (!PreferencesHelper.isWelcomeDone(this)){
+        if (!PreferencesHelper.isWelcomeDone(this)) {
             showAboutPermission();
-//            Answers.getInstance().logCustom(new CustomEvent("First start"));
         }
 
         if (HelperUtil.INSTANCE.isOnline(this)) {
@@ -168,9 +170,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 //            }
 //        } else if (HelperUtil.INSTANCE$.isOnline(this)) {
 //            initADS();
-//            Answers.getInstance().logCustom(new CustomEvent("No Gapps"));
-//        } else {
-//            Crashlytics.log("initADS isOnline false");
 //        }
     }
 
@@ -248,7 +247,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         switch (view.getId()) {
             case R.id.set:
                 selectWallpaper(mGallery.getSelectedItemPosition());
-//                Answers.getInstance().logCustom(new CustomEvent("onSetWallpapers"));
                 break;
             default:
                 break;
@@ -291,6 +289,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         }
         mIsWallpaperSet = false;
 //        requestNewInterstitial();
+        msg("Resume");
     }
     
     @Override
@@ -302,19 +301,8 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         }
         super.onPause();
         mIsWallpaperSet = false;
+        msg("Pause");
     }
-
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        GoogleAnalytics.getInstance(this).reportActivityStart(this);
-//    }
-//
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        GoogleAnalytics.getInstance(this).reportActivityStop(this);
-//    }
 
     @Override
     protected void onDestroy() {
@@ -333,8 +321,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             createBitmap = null;
         }
 
-//        if (mHelper != null) mHelper.dispose();
-//        mHelper = null;
+        msg("Bay Bay");
     }
 
     @Override
@@ -349,9 +336,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         mLoader = (WallpaperLoader) new WallpaperLoader().execute(position);
     }
 
-    /**
-     *  START MAGIC
-     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     protected boolean isScreenLarge(Resources res) {
         Configuration config = res.getConfiguration();
@@ -493,10 +477,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         }.start();
     }
 
-    /**
-     *  FINISH MAGIC
-     */
-
     private void selectWallpaper(int position) {
         if (mIsWallpaperSet) {
             return;
@@ -506,14 +486,19 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
         if (mPrefs.getBoolean("crop", true)) {
             cropAndSetMethod(mImages.get(position));
+            msg("Crop And Set " + mImages.get(position));
         } else {
+            msg("No Crop");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 // code for android android m
+                msg("olala ^_^");
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         == PackageManager.PERMISSION_GRANTED) {
+                    msg("Permission Granted");
                     cropImgTask(position);
                 } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
+                    msg("Not Granted");
                         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                             AlertDialog.Builder pDialog = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
@@ -541,6 +526,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 }
             } else {
                 cropImgTask(position);
+                msg("Not MM");
             }
         }
     }
@@ -626,7 +612,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     // TASKS
-    class WallpaperLoader extends AsyncTask<Integer, Void, Bitmap> {
+    private class WallpaperLoader extends AsyncTask<Integer, Void, Bitmap> {
         BitmapFactory.Options mOptions;
 
         WallpaperLoader() {
@@ -679,7 +665,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         }
     }
 
-    class CreateBitmap extends AsyncTask<Integer, Void, Bitmap> {
+    private class CreateBitmap extends AsyncTask<Integer, Void, Uri> {
 
         boolean running;
 
@@ -695,49 +681,56 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                     .show();
         }
 
-        protected Bitmap doInBackground(Integer... params) {
+        protected Uri doInBackground(Integer... params) {
             if (isCancelled()) return null;
 
             Bitmap bitmap = null;
             OutputStream outputStream;
-
+            Uri uri = null;
             try {
                 bitmap = BitmapFactory.decodeResource(getResources(),
                         mImages.get(params[0]));
-                File path = getExternalFilesDir(null);
-                File dir = new File(path + "/Share Image/");
-                if(!dir.exists()) {
-                    dir.mkdirs();
-                }
-
-                File file = new File(dir, "sw.jpg");
+                File file = new File(getExternalFilesDir(null), "tem.jpg");
                 outputStream = new FileOutputStream(file);
-
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 outputStream.flush();
                 outputStream.close();
-
-                Uri uri = Uri.fromFile(file);
-                Intent i = new Intent(Intent.ACTION_ATTACH_DATA);
-                i.setDataAndType(uri, "image/jpeg");
-                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                i.putExtra("mimeType", "image/jpeg");
-                startActivity(Intent.createChooser(i, getResources().getString(R.string.set_as)));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    uri = FileProvider.getUriForFile(Wallpaper.this, "my.ew.wallpaper.fileProvider", file);
+                } else {
+                    uri = Uri.fromFile(file);
+                }
 
             } catch (OutOfMemoryError e) {
-                mLoadToast.error();
+                showErrorView();
                 return null;
             } catch (IOException e) {
-                mLoadToast.error();
+                showErrorView();
             }
-            return bitmap;
+            return uri;
         }
 
         @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
+        protected void onPostExecute(Uri path) {
+            super.onPostExecute(path);
+            if (path != null) {
+                Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);
+                intent.addCategory(Intent.CATEGORY_DEFAULT);
+                intent.setDataAndType(path, "image/jpeg");
+                intent.putExtra("mimeType", "image/jpeg");
+                startActivity(Intent.createChooser(intent, getResources().getString(R.string.set_as)));
+            }
             mLoadToast.success();
             running = false;
+        }
+
+        private void showErrorView() {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mLoadToast.error();
+                }
+            });
         }
     }
 
