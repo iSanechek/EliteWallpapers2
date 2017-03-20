@@ -125,10 +125,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private AdView mAdView;
 //    private InterstitialAd mInterstitialAd;
 
-    private void msg(String message) {
-        Log.e(">>>TEST<<<", message);
-    }
-
     @SuppressWarnings("deprecation")
 	@Override
     public void onCreate(Bundle icicle) {
@@ -136,8 +132,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         findWallpapers();
         setContentView(R.layout.activity_wallpaper);
         initUI();
-
-        msg("Create");
 
         mLoadToast = new LoadToast(this);
 
@@ -288,8 +282,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             }
         }
         mIsWallpaperSet = false;
-//        requestNewInterstitial();
-        msg("Resume");
     }
     
     @Override
@@ -301,7 +293,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         }
         super.onPause();
         mIsWallpaperSet = false;
-        msg("Pause");
     }
 
     @Override
@@ -320,8 +311,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             createBitmap.cancel(true);
             createBitmap = null;
         }
-
-        msg("Bay Bay");
     }
 
     @Override
@@ -486,19 +475,13 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
         if (mPrefs.getBoolean("crop", true)) {
             cropAndSetMethod(mImages.get(position));
-            msg("Crop And Set " + mImages.get(position));
         } else {
-            msg("No Crop");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // code for android android m
-                msg("olala ^_^");
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         == PackageManager.PERMISSION_GRANTED) {
-                    msg("Permission Granted");
                     cropImgTask(position);
                 } else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
-                    msg("Not Granted");
                         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                             AlertDialog.Builder pDialog = new AlertDialog.Builder(this, R.style.MyAlertDialogStyle);
@@ -526,7 +509,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 }
             } else {
                 cropImgTask(position);
-                msg("Not MM");
             }
         }
     }
@@ -690,13 +672,13 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             try {
                 bitmap = BitmapFactory.decodeResource(getResources(),
                         mImages.get(params[0]));
-                File file = new File(getExternalFilesDir(null), "tem.jpg");
+                File file = new File(getExternalFilesDir(null), "temp.jpg");
                 outputStream = new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 outputStream.flush();
                 outputStream.close();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    uri = FileProvider.getUriForFile(Wallpaper.this, "my.ew.wallpaper.fileProvider", file);
+                    uri = FileProvider.getUriForFile(Wallpaper.this, Wallpaper.this.getApplicationContext().getPackageName() + ".provider", file);
                 } else {
                     uri = Uri.fromFile(file);
                 }
@@ -758,21 +740,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         nd.setAnimation(android.R.anim.fade_in, android.R.anim.slide_out_right);
         nd.show();
     }
-//
-//    private void noInternetMessage() {
-//        AppMsg nc = AppMsg.makeText(this, R.string.no_connect, AppMsg.STYLE_ALERT);
-//        nc.setParent(R.id.fam);
-//        nc.setDuration(AppMsg.LENGTH_SHORT);
-//        nc.setAnimation(android.R.anim.fade_in, android.R.anim.slide_out_right);
-//        nc.show();
-//    }
-//
-//    private void otherLink() {
-//        Intent semen = new Intent(Intent.ACTION_VIEW, Uri.parse(link_other_apps));
-//        startActivity(semen);
-//        Answers.getInstance().logCustom(new CustomEvent("other link"));
-//    }
-//
+
     private void share() {
 //        Answers.getInstance().logShare(new ShareEvent()
 //        .putMethod("share")
