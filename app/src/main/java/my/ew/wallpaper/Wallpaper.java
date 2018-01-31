@@ -1,14 +1,5 @@
 package my.ew.wallpaper;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.ArrayList;
-
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -40,7 +31,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
-
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -58,26 +48,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import static my.ew.wallpaper.utils.PreferencesHelper.isAdsDisabled;
-
-//import com.crashlytics.android.Crashlytics;
-//import com.crashlytics.android.answers.Answers;
-//import com.crashlytics.android.answers.ContentViewEvent;
-//import com.crashlytics.android.answers.CustomEvent;
-//import com.crashlytics.android.answers.ShareEvent;
 import com.devspark.appmsg.AppMsg;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.yandex.mobile.ads.AdEventListener;
+import com.yandex.mobile.ads.AdRequest;
+import com.yandex.mobile.ads.AdSize;
+import com.yandex.mobile.ads.AdView;
 
 import net.steamcrafted.loadtoast.LoadToast;
 
-//import io.fabric.sdk.android.Fabric;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.ArrayList;
+
+import my.elite.wallpapers.BuildConfig;
 import my.elite.wallpapers.R;
 import my.ew.wallpaper.settings.SettingsActivity;
 import my.ew.wallpaper.task.BitmapCropTask;
 import my.ew.wallpaper.utils.AnimUtils;
-
 import my.ew.wallpaper.utils.HelperUtil;
 import my.ew.wallpaper.utils.PreferencesHelper;
 
@@ -85,28 +77,17 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
     private static final String TAG = Wallpaper.class.getSimpleName();
 
-    // to good time
-
-//
-//    // Сылку нудно будет заменить на актуальную
-//    private static final String link_other_apps = "";
-//
-//    private static final String LICENSE_KEY = "";
-//
-//
-//    private static final int RC_REQUEST = 10001;
-//    // Это айди покупки - можно и другой
-//    private static final String ADS_DISABLE = "removeads";
+    private static final String link_other_apps = "https://play.google.com/store/apps/details?id=my.ew.wallpapernew";
+    private static final String my_web_site = "http://averdsoft.ru/";
 
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 0;
-
     protected static final float WALLPAPER_SCREENS_SPAN = 2f;
     protected static final String WALLPAPER_WIDTH_KEY = "wallpaper.width";
     protected static final String WALLPAPER_HEIGHT_KEY = "wallpaper.height";
     private static final String PREF_KEY = "wallpaper_prefs";
     private static SharedPreferences mPrefs;
 
-	private Gallery mGallery;
+    private Gallery mGallery;
     private ImageView mImageView;
     private boolean mIsWallpaperSet;
     private Bitmap mBitmap;
@@ -116,14 +97,9 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     private CreateBitmap createBitmap;
     private LinearLayout fl;
     private CoordinatorLayout mCoordinatorLayout;
-    private FrameLayout tbCont;
     private LoadToast mLoadToast;
 
     int aHeight;
-
-//    private IabHelper mHelper;
-    private AdView mAdView;
-//    private InterstitialAd mInterstitialAd;
 
     @SuppressWarnings("deprecation")
 	@Override
@@ -140,7 +116,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         PreferencesHelper.loadSettings(this);
 
-        Button button = (Button) findViewById(R.id.set);
+        Button button = findViewById(R.id.set);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,79 +124,48 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             }
         });
 
-//        initAnalytics();
-
         if (!PreferencesHelper.isWelcomeDone(this)) {
             showAboutPermission();
         }
 
         if (HelperUtil.INSTANCE.isOnline(this)) {
-            initADS();
+//            initADS();
         }
 
-//        if (HelperUtil.INSTANCE$.isGappsEnable(this)) {
-//            if (HelperUtil.INSTANCE$.isOnline(this)) {
-//                initBilling();
-//            }
-//        } else if (HelperUtil.INSTANCE$.isOnline(this)) {
-//            initADS();
-//        }
+        initADS();
     }
 
     private void initUI() {
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setOnMenuItemClickListener(clickListener);
         toolbar.inflateMenu(R.menu.wallpaper);
         toolbar.setTitle(R.string.app_name);
 
-        fl = (LinearLayout) findViewById(R.id.showsAds);
-        tbCont = (FrameLayout) findViewById(R.id.tb_cont);
+        fl = findViewById(R.id.showsAds);
 
-//        buyButton = (ImageButton) findViewById(R.id.buy_btn);
-//        buyButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                buyBtnEvent();
-//            }
-//        });
-
-        mImageView = (ImageView) findViewById(R.id.wallpaper);
-        mGallery = (Gallery) findViewById(R.id.gallery);
+        mImageView = findViewById(R.id.wallpaper);
+        mGallery = findViewById(R.id.gallery);
         mGallery.setAdapter(new ImageAdapter(this));
         mGallery.setOnItemSelectedListener(this);
         mGallery.setCallbackDuringFling(false);
         mGallery.setSpacing(getResources().getDimensionPixelSize(R.dimen.gallery_spacing));
 
-        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordLayout);
+        mCoordinatorLayout = findViewById(R.id.coordLayout);
 
     }
-
-//    private void buyBtnEvent() {
-//        if (!PreferencesHelper.INSTANCE$.isAdsDisabled()) {
-//            if (HelperUtil.INSTANCE$.isOnline(this)) {
-//                Answers.getInstance().logPurchase(new PurchaseEvent()
-//                        .putItemName("Ads").putItemType("Disable Ads").putItemId(ADS_DISABLE));
-////            RandomString randomString = new RandomString(36);
-////            String payload = randomString.nextString();
-//                String payload = "";
-//                mHelper.launchPurchaseFlow(this, ADS_DISABLE, RC_REQUEST,
-//                        mPurchaseFinishedListener, payload);
-//            } else {
-//                noInternetMessage();
-//                Crashlytics.log("Click Buy Btn isOnline false");
-//            }
-//        }
-//    }
     
     private Toolbar.OnMenuItemClickListener clickListener = new OnMenuItemClickListener() {
 		
 		@Override
 		public boolean onMenuItemClick(MenuItem menuItem) {
 			switch (menuItem.getItemId()) {
-//            case R.id.other_apps:
-//                otherLink();
-//                break;
+			    case R.id.other_apps:
+			        otherLink();
+			        break;
+			        case R.id.my_web:
+			            share2();
+			            break;
             case R.id.no_wallpaper:
                 dialogShow();
                 break;
@@ -245,6 +190,16 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             default:
                 break;
         }
+    }
+
+    private void otherLink() {
+        Intent semen = new Intent(Intent.ACTION_VIEW, Uri.parse(link_other_apps));
+        startActivity(semen);
+    }
+
+    private void share2() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://averdsoft.ru/"));
+        startActivity(browserIntent);
     }
 
     private void findWallpapers() {
@@ -276,32 +231,17 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     @Override
     protected void onResume() {
         super.onResume();
-        if (!isAdsDisabled()) {
-            if (mAdView != null) {
-                mAdView.resume();
-            }
-        }
         mIsWallpaperSet = false;
     }
     
     @Override
     public void onPause() {
-        if (!isAdsDisabled()) {
-            if (mAdView != null) {
-                mAdView.pause();
-            }
-        }
         super.onPause();
         mIsWallpaperSet = false;
     }
 
     @Override
     protected void onDestroy() {
-        if (!isAdsDisabled()) {
-            if (mAdView != null) {
-                mAdView.destroy();
-            }
-        }
         super.onDestroy();
         if (mLoader != null && mLoader.getStatus() != WallpaperLoader.Status.FINISHED) {
             mLoader.cancel(true);
@@ -311,11 +251,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             createBitmap.cancel(true);
             createBitmap = null;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
     }
 
     public void onItemSelected(AdapterView parent, View v, int position, long id) {
@@ -610,7 +545,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 return BitmapFactory.decodeResource(getResources(),
                         mImages.get(params[0]), mOptions);
             } catch (OutOfMemoryError e) {
-//                Crashlytics.logException(e);
                 return null;
             }            
         }
@@ -648,7 +582,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private class CreateBitmap extends AsyncTask<Integer, Void, Uri> {
-
         boolean running;
 
         @Override
@@ -666,19 +599,19 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         protected Uri doInBackground(Integer... params) {
             if (isCancelled()) return null;
 
-            Bitmap bitmap = null;
+            Bitmap bitmap;
             OutputStream outputStream;
             Uri uri = null;
             try {
                 bitmap = BitmapFactory.decodeResource(getResources(),
                         mImages.get(params[0]));
-                File file = new File(getExternalFilesDir(null), "temp.jpg");
+                File file = new File(getExternalCacheDir(), "temp.jpg");
                 outputStream = new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 outputStream.flush();
                 outputStream.close();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    uri = FileProvider.getUriForFile(Wallpaper.this, Wallpaper.this.getApplicationContext().getPackageName() + ".provider", file);
+                    uri = FileProvider.getUriForFile(Wallpaper.this, BuildConfig.APPLICATION_ID + ".provider", file);
                 } else {
                     uri = Uri.fromFile(file);
                 }
@@ -695,12 +628,11 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         @Override
         protected void onPostExecute(Uri path) {
             super.onPostExecute(path);
+            Log.e("TEST", "PAth " + path);
             if (path != null) {
-                Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);
-                intent.addCategory(Intent.CATEGORY_DEFAULT);
-                intent.setDataAndType(path, "image/jpeg");
-                intent.putExtra("mimeType", "image/jpeg");
+                Intent intent = HelperUtil.INSTANCE.getSetAsWallpaper(Wallpaper.this, path);
                 startActivity(Intent.createChooser(intent, getResources().getString(R.string.set_as)));
+
             }
             mLoadToast.success();
             running = false;
@@ -715,14 +647,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             });
         }
     }
-
-    // Analytics
-//    private void initAnalytics() {
-//        Tracker t = ((Analytics)getApplication()).getTracker(Analytics.TrackerName.APP_TRACKER);
-//        t.setScreenName("Wallpaper");
-//        t.send(new HitBuilders.AppViewBuilder().build());
-//
-//    }
 
     // TOAST
     private void done() {
@@ -742,11 +666,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private void share() {
-//        Answers.getInstance().logShare(new ShareEvent()
-//        .putMethod("share")
-//        .putContentName("sharing link")
-//        .putContentType("link on Google play")
-//        .putContentId("link"));
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         // Тут тоже надо ссылку заменить на актуальную
@@ -791,7 +710,7 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         dialogAP.setCancelable(true);
         dialogAP.setPositiveButton(R.string.close_about_dialog, null);
         dialogAP.show();
-        final WebView webView = (WebView) customView.findViewById(R.id.webview);
+        final WebView webView = customView.findViewById(R.id.webview);
         try {
             // Load from changelog.html in the assets folder
             StringBuilder buf = new StringBuilder();
@@ -845,17 +764,17 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             @Override
             public void run() {
                 if (fl.getVisibility() == View.GONE) {
-                    AnimUtils startAH = new AnimUtils(fl, 1500, AnimUtils.Companion.getEXPAND());
+                    AnimUtils startAH = new AnimUtils(fl, 1500, AnimUtils.EXPAND);
                     startAH.setHeight(aHeight);
                     fl.startAnimation(startAH);
                 }
-                if (fl.getVisibility() == View.VISIBLE) {
-                    mAdView.setVisibility(View.VISIBLE);
-                }
-                if (mPrefs.getBoolean("gapps", true)) {
-                    tbCont.setVisibility(View.VISIBLE);
-//                    buyButton.setVisibility(View.VISIBLE);
-                }
+//                if (fl.getVisibility() == View.VISIBLE) {
+//                    mAdView.setVisibility(View.VISIBLE);
+//                }
+//                if (mPrefs.getBoolean("gapps", true)) {
+//                    tbCont.setVisibility(View.VISIBLE);
+////                    buyButton.setVisibility(View.VISIBLE);
+//                }
             }
         });
 
@@ -863,84 +782,47 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
     private void disableShowADS() {
         if (fl.getVisibility() == View.VISIBLE) {
-            AnimUtils helper = new AnimUtils(fl, 1000, AnimUtils.Companion.getCOLLAPSED());
+            AnimUtils helper = new AnimUtils(fl, 1000, AnimUtils.COLLAPSED);
             aHeight = helper.getHeight();
             fl.startAnimation(helper);
         }
 
-        if (mAdView != null) {
-            mAdView.destroy();
-        }
-
-        if (tbCont.getVisibility() == View.VISIBLE) {
-            tbCont.setVisibility(View.GONE);
-        }
+//        if (tbCont.getVisibility() == View.VISIBLE) {
+//            tbCont.setVisibility(View.GONE);
+//        }
     }
 
     //ADS
     private void initADS() {
-
-        mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("TA17606LXJ")
-                .addTestDevice("TA2470I7O")
-                .build();
-        mAdView.setAdListener(new AdListener() {
+        Log.e("TEST", "Init ADS");
+        AdView mAdView = findViewById(R.id.banner_view);
+        mAdView.setBlockId("R-M-DEMO-320x50");
+        mAdView.setAdSize(AdSize.BANNER_320x50);
+//        initShowADS();
+        mAdView.setAdEventListener(new AdEventListener.SimpleAdEventListener() {
             @Override
-            public void onAdClosed() {
-                super.onAdClosed();
-            }
+            public void onAdLoaded() {
+                super.onAdLoaded();
+//                initShowADS();
 
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                super.onAdFailedToLoad(errorCode);
+                Log.e("TEST", "Load");
             }
 
             @Override
             public void onAdOpened() {
                 super.onAdOpened();
-                showThksToast();
-            }
+//                disableShowADS();
+                Log.e("TEST", "Open");
 
-            @Override
-            public void onAdLoaded() {
-                super.onAdLoaded();
-                initShowADS();
             }
         });
-        mAdView.loadAd(adRequest);
+        AdRequest mAdRequest = AdRequest
+                .builder()
+                .build();
+        mAdView.loadAd(mAdRequest);
+        initShowADS();
     }
 
-//    private void requestNewInterstitial() {
-//        mInterstitialAd = new InterstitialAd(this);
-//        mInterstitialAd.setAdUnitId(INTERSTITAL_KEY);
-//        AdRequest adRequest = new AdRequest.Builder()
-//                .addTestDevice("5DQOOZ4HKJ95S85L")
-//                .addTestDevice("TA17606LXJ")
-//                .addTestDevice("TA2470I7O")
-//                .build();
-//        mInterstitialAd.loadAd(adRequest);
-//        mInterstitialAd.setAdListener(new AdListener() {
-//            @Override
-//            public void onAdClosed() {
-//                super.onAdClosed();
-//                Crashlytics.log("Interstitial on Ad Closed");
-//            }
-//
-//            @Override
-//            public void onAdFailedToLoad(int errorCode) {
-//                super.onAdFailedToLoad(errorCode);
-//                Crashlytics.log("Interstitial Failed To Load: " + errorCode);
-//            }
-//
-//            @Override
-//            public void onAdOpened() {
-//                super.onAdOpened();
-//                showThksToast();
-//                Answers.getInstance().logCustom(new CustomEvent("Interstitial Click"));
-//            }
-//        });
-//    }
 
     private void showThksToast() {
         runOnUiThread(new Runnable() {
@@ -950,90 +832,4 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
             }
         });
     }
-
-    // INIT BILLING
-//    private void initBilling() {
-//        mHelper = new IabHelper(this, LICENSE_KEY);
-//        mHelper.enableDebugLogging(true);
-//        mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-//            public void onIabSetupFinished(IabResult result) {
-//                if (!result.isSuccess()) {
-//                    Crashlytics.log("Problem setting up in-app billing: " + result);
-//                    return;
-//                }
-//
-//                if (mHelper == null) return;
-//
-//                mHelper.queryInventoryAsync(mGotInventoryListener);
-//            }
-//        });
-//    }
-//
-//    IabHelper.QueryInventoryFinishedListener mGotInventoryListener = new IabHelper.QueryInventoryFinishedListener() {
-//        public void onQueryInventoryFinished(IabResult result, Inventory inventory) {
-//
-//            if (mHelper == null) return;
-//
-//            // Is it a failure?
-//            if (result.isFailure()) {
-//
-//                return;
-//            }
-//
-//            Purchase purchase = inventory.getPurchase(ADS_DISABLE);
-//            PreferencesHelper.INSTANCE$.savePurchase(getApplicationContext(), PreferencesHelper.Purchase.DISABLE_ADS, purchase != null && verifyDeveloperPayload(purchase));
-//            if (!PreferencesHelper.INSTANCE$.isAdsDisabled()) {
-//                initADS();
-//            } else if (fl.getVisibility() == View.VISIBLE) {
-//                disableShowADS();
-//            } else {
-//                Crashlytics.log("Just Fuck mGotInvertoryListener");
-//            }
-//        }
-//    };
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        if (!mHelper.handleActivityResult(requestCode, resultCode, data)) {
-//            super.onActivityResult(requestCode, resultCode, data);
-//        }
-//    }
-//
-//    /** Verifies the developer payload of a purchase. */
-//    boolean verifyDeveloperPayload(Purchase p) {
-//        String payload = p.getDeveloperPayload();
-//
-//        Crashlytics.log("verifyDeveloperPayload: " + payload);
-//		/*
-//		 * TODO: здесь когда нибудб будет верификация
-//		 * возможно даже со своим сервером
-//		 */
-//
-//        return true;
-//    }
-//
-//    IabHelper.OnIabPurchaseFinishedListener mPurchaseFinishedListener = new IabHelper.OnIabPurchaseFinishedListener() {
-//        public void onIabPurchaseFinished(IabResult result, Purchase purchase) {
-//
-//            if (result.isFailure()) {
-//                return;
-//            }
-//            if (!verifyDeveloperPayload(purchase)) {
-//                return;
-//            }
-//
-//            if (purchase.getSku().equals(ADS_DISABLE)) {
-//
-//                PreferencesHelper.INSTANCE$.savePurchase(getApplication(), PreferencesHelper.Purchase.DISABLE_ADS, true);
-//                if (!PreferencesHelper.INSTANCE$.isAdsDisabled()) {
-//                    initADS();
-//                } else if (fl.getVisibility() == View.VISIBLE) {
-//                    disableShowADS();
-//                } else {
-//                    Crashlytics.log("Just Fuck mPurchaseFinishedListener");
-//                }
-//            }
-//        }
-//    };
 }

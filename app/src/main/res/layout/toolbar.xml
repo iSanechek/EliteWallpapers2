@@ -12,23 +12,23 @@
     android:elevation="8dp"
     tools:ignore="UnusedAttribute">
 
-    <FrameLayout android:id="@+id/tb_cont"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginRight="@dimen/btn_layout_marginRight"
-        android:visibility="gone">
+    <!--<FrameLayout android:id="@+id/tb_cont"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="right"-->
+        <!--android:layout_marginRight="@dimen/btn_layout_marginRight"-->
+        <!--android:visibility="gone">-->
 
-        <ImageButton android:id="@+id/buy_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_lock_outline_white_24dp"
-            android:background="@drawable/button_effect"
-            android:clickable="true"
-            android:padding="5dp"
-            android:visibility="gone"/>
+        <!--<ImageButton android:id="@+id/buy_btn"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@drawable/ic_lock_outline_white_24dp"-->
+            <!--android:background="@drawable/button_effect"-->
+            <!--android:clickable="true"-->
+            <!--android:padding="5dp"-->
+            <!--android:visibility="gone"/>-->
 
-    </FrameLayout>
+    <!--</FrameLayout>-->
 
 
 

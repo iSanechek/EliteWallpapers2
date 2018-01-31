@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <!--<item android:id="@+id/other_apps"-->
-        <!--android:title="@string/link_other_app"-->
-        <!--android:orderInCategory="100"-->
-        <!--app:showAsAction="never" />-->
+    <item android:id="@+id/my_web"
+        android:title="@string/my_web_site"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/other_apps"
+        android:title="@string/link_other_app"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 
     <item android:id="@+id/no_wallpaper"
         android:title="@string/no_wallpaper"

@@ -1,10 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "26.0.2"
 
     def versionPropsFile = file('version.properties')
     if (versionPropsFile.canRead()) {
@@ -19,6 +18,8 @@ android {
             value = 1;
         }
 
+        def fileNaming = "apk/EliteWallpaper"
+
         def versionMajor = 5
         def versionMinor = 2
         def versionPatch = versionProps['VERSION_PATCH'].toInteger() + value
@@ -32,9 +33,9 @@ android {
         versionProps.store(versionPropsFile.newWriter(), null)
 
         defaultConfig {
-            applicationId 'my.ew.wallpaper'
+            applicationId 'my.ew.wallpaper.test'
             minSdkVersion 15
-            targetSdkVersion 25
+            targetSdkVersion 27
             versionCode versionNumber
             versionName "${versionMajor}.${versionMinor}.${versionPatch} (${versionBuild})"
             vectorDrawables.useSupportLibrary = true
@@ -42,15 +43,12 @@ android {
 //        versionName '5.1.6'
         }
 
-        applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                def fileNaming = "apk/EliteWallpaper"
-                def outputFile = output.outputFile
-                if (outputFile != null && outputFile.name.endsWith('.apk')) {
-                    output.outputFile = new File(getProject().getRootDir(), "${fileNaming}-${versionMajor}.${versionMinor}.${versionPatch}-${outputFile.name}")
-                }
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "${fileNaming}-${versionMajor}.${versionMinor}.${versionPatch}.apk"
             }
         }
+
     } else {
         throw new GradleException("Could not read version.properties!")
     }
@@ -70,26 +68,25 @@ android {
     }
 
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
         main.java.srcDirs += 'src/main/java'
     }
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services-ads:10.2.0'
     compile 'com.github.johnkil.android-appmsg:appmsg:1.2.0'
     compile "com.android.support:appcompat-v7:$support_version"
     compile "com.android.support:support-v4:$support_version"
     compile "com.android.support:design:$support_version"
     compile 'net.steamcrafted:load-toast:1.0.9'
     compile 'info.hoang8f:fbutton:1.0.5'
-//    compile "com.andkulikov:transitionseverywhere:1.7.0"
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'com.yandex.android:mobileads:2.62'
+    compile 'com.yandex.android:mobmetricalib:2.73'
 }
 
 buildscript {
-    ext.kotlin_version = '1.1.1'
-    ext.support_version = '25.3.0'
+    ext.kotlin_version = '1.2.21'
+    ext.support_version = '27.0.2'
     repositories {
         jcenter()
     }

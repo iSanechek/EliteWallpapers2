@@ -15,18 +15,18 @@ class AnimUtils(val vv: View, duration: Int, val mType: Int) : Animation() {
 
     init {
         setDuration(duration.toLong())
-        endHeight = vv.getHeight()
-        lp = (vv.getLayoutParams() as LinearLayout.LayoutParams)
+        endHeight = vv.height
+        lp = (vv.layoutParams as LinearLayout.LayoutParams)
         if (mType == EXPAND) {
             lp.height = 0
         } else {
             lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
         }
-        vv.setVisibility(View.VISIBLE)
+        vv.visibility = View.VISIBLE
     }
 
     fun getHeight(): Int {
-        return vv.getHeight()
+        return vv.height
     }
 
     fun setHeight(height: Int) {
@@ -47,14 +47,13 @@ class AnimUtils(val vv: View, duration: Int, val mType: Int) : Animation() {
                 lp.height = ViewGroup.LayoutParams.WRAP_CONTENT
                 vv.requestLayout()
             } else {
-                vv.setVisibility(View.GONE)
+                vv.visibility = View.GONE
             }
         }
     }
 
     companion object {
-
-        public val COLLAPSED: Int = 1
-        public val EXPAND: Int = 0
+        const val COLLAPSED: Int = 1
+        const val EXPAND: Int = 0
     }
 }

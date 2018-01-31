@@ -72,14 +72,11 @@
                           android:layout_height="wrap_content"
                           android:orientation="vertical"
                           android:background="@color/my_primary_color"
-                          android:visibility="gone" >
-                <com.google.android.gms.ads.AdView
-                    android:id="@+id/adView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    ads:adSize="SMART_BANNER"
-                    ads:adUnitId="ca-app-pub-6423555452159863/3478299030">
-                </com.google.android.gms.ads.AdView>
+                          android:visibility="visible" >
+                <com.yandex.mobile.ads.AdView
+                    android:id="@+id/banner_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
