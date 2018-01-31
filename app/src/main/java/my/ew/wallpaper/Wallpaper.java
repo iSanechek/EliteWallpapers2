@@ -771,10 +771,6 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 //                if (fl.getVisibility() == View.VISIBLE) {
 //                    mAdView.setVisibility(View.VISIBLE);
 //                }
-//                if (mPrefs.getBoolean("gapps", true)) {
-//                    tbCont.setVisibility(View.VISIBLE);
-////                    buyButton.setVisibility(View.VISIBLE);
-//                }
             }
         });
 
