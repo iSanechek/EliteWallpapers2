@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "26.0.2"
+    buildToolsVersion "27.0.3"
 
     def versionPropsFile = file('version.properties')
     if (versionPropsFile.canRead()) {
@@ -33,7 +33,7 @@ android {
         versionProps.store(versionPropsFile.newWriter(), null)
 
         defaultConfig {
-            applicationId 'my.ew.wallpaper.test'
+            applicationId 'my.ew.wallpaper'
             minSdkVersion 15
             targetSdkVersion 27
             versionCode versionNumber
@@ -42,6 +42,42 @@ android {
 //        versionCode 70
 //        versionName '5.1.6'
         }
+
+//        flavorDimensions "wtf"
+//        productFlavors {
+//            stable {
+//                dimension "wtf"
+//            }
+//
+//            beta {
+//                applicationId 'my.ew.wallpaper.beta'
+//                versionCode versionNumber
+//                versionName "${versionMajor}.${versionMinor}.${versionPatch} (${versionBuild}) beta"
+//                dimension "wtf"
+//            }
+//
+//            dev {
+//                minSdkVersion '21'
+//                applicationId 'my.ew.wallpaper.debug'
+//                versionCode versionNumber
+//                versionName "${versionMajor}.${versionMinor}.${versionPatch} (${versionBuild}) dev_api_21"
+//                dimension "wtf"
+//            }
+//
+//            black {
+//                applicationId 'my.ew.wallpapernew'
+//                versionCode versionNumber
+//                versionName "${versionMajor}.${versionMinor}.${versionPatch} (${versionBuild}) black"
+//                dimension "wtf"
+//            }
+//
+//            moto {
+//                applicationId 'my.ew.wallpapers'
+//                versionCode versionNumber
+//                versionName "${versionMajor}.${versionMinor}.${versionPatch} (${versionBuild}) moto"
+//                dimension "wtf"
+//            }
+//        }
 
         android.applicationVariants.all { variant ->
             variant.outputs.all {
@@ -69,6 +105,15 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/java'
+//        moto {
+//            java {
+//                srcDirs += 'src/main/java'
+//            }
+//
+//            res {
+//                srcDirs += 'moto'
+//            }
+//        }
     }
 }
 

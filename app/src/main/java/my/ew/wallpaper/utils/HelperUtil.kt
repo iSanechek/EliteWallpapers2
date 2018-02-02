@@ -11,8 +11,8 @@ object HelperUtil {
 
     fun isOnline(context: Context): Boolean {
         val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connMgr.getActiveNetworkInfo()
-        return networkInfo != null && networkInfo.isConnectedOrConnecting()
+        val networkInfo = connMgr.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnectedOrConnecting
     }
 
     fun getSetAsWallpaper(ctx: Context, uri: Uri) : Intent =

@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -51,6 +52,7 @@ import android.widget.Toast;
 import com.devspark.appmsg.AppMsg;
 import com.yandex.mobile.ads.AdEventListener;
 import com.yandex.mobile.ads.AdRequest;
+import com.yandex.mobile.ads.AdRequestError;
 import com.yandex.mobile.ads.AdSize;
 import com.yandex.mobile.ads.AdView;
 
@@ -129,10 +131,8 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         }
 
         if (HelperUtil.INSTANCE.isOnline(this)) {
-//            initADS();
+            initADS();
         }
-
-        initADS();
     }
 
     private void initUI() {
@@ -610,11 +610,11 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 outputStream.flush();
                 outputStream.close();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    uri = FileProvider.getUriForFile(Wallpaper.this, BuildConfig.APPLICATION_ID + ".provider", file);
-                } else {
-                    uri = Uri.fromFile(file);
-                }
+                uri = FileProvider.getUriForFile(Wallpaper.this, BuildConfig.APPLICATION_ID + ".provider", file);
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                } else {
+//                    uri = Uri.fromFile(file);
+//                }
 
             } catch (OutOfMemoryError e) {
                 showErrorView();
@@ -793,9 +793,22 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
         Log.e("TEST", "Init ADS");
         AdView mAdView = findViewById(R.id.banner_view);
         mAdView.setBlockId("R-M-DEMO-320x50");
+//        mAdView.setBlockId("R-M-262926-1");
         mAdView.setAdSize(AdSize.BANNER_320x50);
+        AdRequest mAdRequest = AdRequest
+                .builder()
+                .build();
+        mAdView.loadAd(mAdRequest);
+        mAdView.setVisibility(View.VISIBLE);
 //        initShowADS();
         mAdView.setAdEventListener(new AdEventListener.SimpleAdEventListener() {
+
+            @Override
+            public void onAdFailedToLoad(@NonNull AdRequestError error) {
+                super.onAdFailedToLoad(error);
+                Log.e("TEST", "Error " + error.getCode() + " Desc " + error.getDescription());
+            }
+
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
@@ -812,11 +825,8 @@ public class Wallpaper extends AppCompatActivity implements AdapterView.OnItemSe
 
             }
         });
-        AdRequest mAdRequest = AdRequest
-                .builder()
-                .build();
-        mAdView.loadAd(mAdRequest);
-        initShowADS();
+
+//        initShowADS();
     }
 
 
